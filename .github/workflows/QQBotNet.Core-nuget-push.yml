@@ -1,0 +1,41 @@
+name: Lagrange.Core NuGet Push
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Build and Pack
+        run: |
+          cd ./QQBotNet.Core
+          dotnet build --configuration Release
+          dotnet pack --configuration Release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
+          ls
+          ls ./bin/Release/
+
+      - name: Install Nuget
+        uses: nuget/setup-nuget@v1
+        with:
+          nuget-version: '5.x'
+
+      - name: Add private GitHub registry to NuGet
+        run: |
+          dotnet nuget add source --username Zaitonn --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Zaitonn/index.json"
+
+      - name: Push generated package to GitHub registry and NuGet
+        run: |
+          dotnet nuget push .\QQBotNet.Core\bin\Release\*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
+          nuget push .\QQBotNet.Core\bin\Release\*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}

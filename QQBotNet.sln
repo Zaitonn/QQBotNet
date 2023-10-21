@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQBotNet.Core", "QQBotNet.Core\QQBotNet.Core.csproj", "{DD6466FF-FC68-4002-ADAB-92E2F2BE164F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQBotNet.OneBot", "QQBotNet.OneBot\QQBotNet.OneBot.csproj", "{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD6466FF-FC68-4002-ADAB-92E2F2BE164F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD6466FF-FC68-4002-ADAB-92E2F2BE164F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD6466FF-FC68-4002-ADAB-92E2F2BE164F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD6466FF-FC68-4002-ADAB-92E2F2BE164F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
