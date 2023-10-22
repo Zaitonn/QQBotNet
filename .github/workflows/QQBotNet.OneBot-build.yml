@@ -1,12 +1,10 @@
-name: Lagrange.OneBot Build
+name: QQBotNet.OneBot Build
 
 on:
   push:
     paths:
       - "**.cs"
-    branches: ["main"]
   pull_request:
-    branches: ["main"]
     paths:
       - "**.cs"
 

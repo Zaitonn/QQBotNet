@@ -1,25 +1,34 @@
 using System.Text.Json;
+using System.Threading.Tasks;
 using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Utils;
 
 namespace QQBotNet.Core.Services.Operations;
 
 [Operation(OperationCode.Hello)]
 public class HelloOperation : IOperation
 {
-    public void HandleOperation(Packet packet, WebSocketService service)
+    public async Task HandleOperationAsync(IPacket packet, WebSocketService service)
     {
-        service.SendPacket(
+        await service.SendPacket(
             new()
             {
-                Operation = OperationCode.Identify,
+                OperationCode = OperationCode.Identify,
                 Data = JsonSerializer.SerializeToNode(
                     new Identification
                     {
-                        Token = $"{service.Info.BotAppId}.{service.Info.BotToken}",
-                        Shard = new[] { 0, 1 }
-                    }
+                        Token = $"{service.Info.BotAppId}.{service.Info.BotToken}", // 啥b
+                        Shard = new[] { 0, 1 },
+                        Intents = EventIntent.ForumEvent | EventIntent.GuildMessages,
+                    },
+                    JsonSerializerOptionsFactory.SnakeCase
                 )
             }
         );
+
+        int? heartbeatInterval = packet.Data
+            .Deserialize<HeartbeatInfo>(JsonSerializerOptionsFactory.SnakeCase)
+            ?.HeartbeatInterval;
+        service.HeartbeatInterval = heartbeatInterval ?? 0;
     }
 }

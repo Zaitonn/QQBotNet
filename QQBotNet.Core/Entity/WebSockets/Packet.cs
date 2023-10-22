@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 
 namespace QQBotNet.Core.Entity.WebSockets;
 
-public class Packet
+public class Packet : IPacket
 {
     /// <summary>
     /// 长连接维护 OpCode
     /// </summary>
-    [JsonPropertyName("o")]
-    public OperationCode Operation { get; set; }
+    [JsonPropertyName("op")]
+    public OperationCode OperationCode { get; set; }
 
     /// <summary>
     /// 事件内容
@@ -27,5 +27,5 @@ public class Packet
     /// 下行消息序列号
     /// </summary>
     [JsonPropertyName("s")]
-    public long SerialNumber { get; set; }
+    public long? SerialNumber { get; set; }
 }

@@ -5,5 +5,10 @@ namespace QQBotNet.Core.Services.Operations;
 
 public interface IOperation
 {
-    public void HandleOperation(Packet packet, WebSocketService websocketService);
+    /// <summary>
+    /// 异步处理操作
+    /// </summary>
+    /// <param name="packet">数据包</param>
+    /// <param name="websocketService">WebSocket实例</param>
+    public Task HandleOperationAsync(IPacket packet, WebSocketService websocketService);
 }

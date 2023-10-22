@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net472</TargetFrameworks>
+        <TargetFrameworks>net6.0;netstandard2.1;</TargetFrameworks>
 	    <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
 
@@ -23,7 +23,7 @@
         <PackageReference Include="WebSocket4Net" Version="0.15.2" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)'=='net472'">
+    <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
     </ItemGroup>

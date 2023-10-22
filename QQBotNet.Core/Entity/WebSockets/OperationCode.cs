@@ -3,6 +3,11 @@ namespace QQBotNet.Core.Entity.WebSockets;
 public enum OperationCode
 {
     /// <summary>
+    /// 未知
+    /// </summary>
+    Unknown = -1,
+
+    /// <summary>
     /// 服务端进行消息推送
     /// </summary>
     Dispatch = 0,

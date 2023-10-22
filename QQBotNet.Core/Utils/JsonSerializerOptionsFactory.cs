@@ -9,6 +9,9 @@ internal static class JsonSerializerOptionsFactory
     public static readonly JsonSerializerOptions CamelCase =
         new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
+    public static readonly JsonSerializerOptions CamelCaseWithIndented =
+        new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, WriteIndented = true };
+
     public static readonly JsonSerializerOptions SnakeCase =
         new() { PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy() };
 

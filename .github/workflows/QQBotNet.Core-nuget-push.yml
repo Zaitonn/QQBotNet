@@ -1,4 +1,4 @@
-name: Lagrange.Core NuGet Push
+name: QQBotNet.Core NuGet Push
 
 on:
   push:
@@ -37,5 +37,5 @@ jobs:
 
       - name: Push generated package to GitHub registry and NuGet
         run: |
-          dotnet nuget push .\QQBotNet.Core\bin\Release\*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
-          nuget push .\QQBotNet.Core\bin\Release\*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}
+          dotnet nuget push ./QQBotNet.Core/bin/Release/*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
+          nuget push ./QQBotNet.Core/bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}

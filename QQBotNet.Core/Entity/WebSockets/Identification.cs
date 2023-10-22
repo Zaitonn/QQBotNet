@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Serialization;
 
 namespace QQBotNet.Core.Entity.WebSockets;
@@ -14,11 +15,11 @@ public class Identification
     /// 此次连接所需要接收的事件
     /// </summary>
     [JsonInclude]
-    public long Intents { get; set; }
+    public EventIntent Intents { get; set; }
 
     /// <summary>
     /// 分片逻辑
     /// </summary>
     [JsonInclude]
-    public int[] Shard { get; set; } = { };
+    public int[] Shard { get; set; } = Array.Empty<int>();
 }
