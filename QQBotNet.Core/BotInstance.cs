@@ -1,5 +1,6 @@
 ﻿using QQBotNet.Core.Entity;
 using QQBotNet.Core.Services;
+using QQBotNet.Core.Services.Events;
 using System;
 using System.Threading.Tasks;
 
@@ -7,13 +8,36 @@ namespace QQBotNet.Core;
 
 public sealed class BotInstance : IDisposable
 {
-    public WebSocketService? WebSocketService { get; private set; }
+    public WebSocketService? WebSocketService;
 
-    public HttpService? HttpService { get; private set; }
+    public HttpService? HttpService;
 
+    /// <summary>
+    /// 事件调用器
+    /// </summary>
+    public readonly EventInvoker Invoker;
+
+    /// <summary>
+    /// 是否为沙箱环境
+    /// </summary>
     public readonly bool IsSandbox;
 
-    internal readonly SensitiveInfo BotInfo;
+    ///  <summary>
+    /// 开发者ID
+    /// </summary>
+    public readonly string BotAppId;
+
+    /// <summary>
+    /// 机器人令牌
+    /// </summary>
+    public readonly string BotToken;
+
+    /// <summary>
+    /// 机器人密钥
+    /// </summary>
+    public readonly string BotSecret;
+
+    public string? WebSocketUrl => WebSocketService?.Url;
 
     /// <summary>
     /// 机器人实例
@@ -28,14 +52,11 @@ public sealed class BotInstance : IDisposable
         EnsureNotEmptyOrNull(botToken, nameof(botToken));
         EnsureNotEmptyOrNull(botSecret, nameof(botSecret));
 
-        BotInfo = new()
-        {
-            BotAppId = botAppId,
-            BotToken = botToken,
-            BotSecret = botSecret
-        };
-
+        BotAppId = botAppId;
+        BotToken = botToken;
+        BotSecret = botSecret;
         IsSandbox = isSandbox;
+        Invoker = new(this);
     }
 
     /// <summary>
@@ -43,10 +64,10 @@ public sealed class BotInstance : IDisposable
     /// </summary>
     public async Task StartAsync()
     {
-        HttpService = new(BotInfo, IsSandbox);
+        HttpService = new(this, IsSandbox);
         HttpService.Start();
 
-        WebSocketService = new(BotInfo, await HttpService.GetWebSocketUrl());
+        WebSocketService = new(this, await HttpService.GetWebSocketUrl());
         WebSocketService.Start();
     }
 

@@ -1,5 +1,5 @@
 using QQBotNet.Core.Entity.WebSockets;
-using QQBotNet.Core.Services.Operations.DispatchHandlers;
+using QQBotNet.Core.Services.Operations.DispatchEvent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Reflection;
@@ -10,7 +10,7 @@ namespace QQBotNet.Core.Services.Operations;
 [Operation(OperationCode.Dispatch)]
 public class DispatchOperation : IOperation
 {
-    private static readonly Dictionary<string, IOperation> _handlers = new();
+    private static readonly Dictionary<DispatchEventType, IOperation> _handlers = new();
 
     static DispatchOperation()
     {
@@ -18,22 +18,20 @@ public class DispatchOperation : IOperation
         {
             var attribute = type.GetCustomAttribute<DispatchHandlerAttribute>();
             if (
-                attribute is not null
-                && type is not null
-                && !_handlers.ContainsKey(attribute.EventType)
+                attribute is not null && type is not null && !_handlers.ContainsKey(attribute.Event)
             )
             {
-                _handlers.Add(attribute.EventType, (IOperation)Activator.CreateInstance(type)!);
+                _handlers.Add(attribute.Event, (IOperation)Activator.CreateInstance(type)!);
             }
         }
     }
 
-    public async Task HandleOperationAsync(IPacket packet, WebSocketService websocketService)
+    public async Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
     {
-        if (
-            !string.IsNullOrEmpty(packet.Type)
-            && _handlers.TryGetValue(packet.Type!, out IOperation? o)
-        )
-            await o.HandleOperationAsync(packet, websocketService);
+        if (!Enum.TryParse(packet.Type, true, out DispatchEventType result))
+            throw new NotSupportedException($"未知事件类型: {packet.Type}");
+
+        if (_handlers.TryGetValue(result, out IOperation? o))
+            await o.HandleOperationAsync(packet, botInstance);
     }
 }

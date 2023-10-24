@@ -9,6 +9,6 @@ public interface IOperation
     /// 异步处理操作
     /// </summary>
     /// <param name="packet">数据包</param>
-    /// <param name="websocketService">WebSocket实例</param>
-    public Task HandleOperationAsync(IPacket packet, WebSocketService websocketService);
+    /// <param name="botInstance">机器人实例</param>
+    public Task HandleOperationAsync(IPacket packet, BotInstance botInstance);
 }

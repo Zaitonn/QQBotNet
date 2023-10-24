@@ -5,13 +5,13 @@
 	    <LangVersion>11</LangVersion>
         <Nullable>enable</Nullable>
 
-        <!-- NuGet -->
+        <!-- MetaData -->
         <Title>QQBotNet.Core</Title>
         <Authors>Zaitonn</Authors>
         <Description>QQ机器人的非官方C# SDK</Description>
-        <Version>0.0.1-alpha</Version>
+        <Version>0.0.2-alpha</Version>
         <Copyright>Zaitonn 2023</Copyright>
-        <RepositoryUrl>https://github.com/Zaitonn/QQBotNet.Core</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Zaitonn/QQBotNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <IsPublishable>true</IsPublishable>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

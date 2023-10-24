@@ -1,33 +1,22 @@
+using QQBotNet.Core.Entity;
+using QQBotNet.Core.Entity.Back;
 using QQBotNet.Core.Entity.WebSockets;
-using QQBotNet.Core.Services.EventArg;
 using QQBotNet.Core.Services.Operations;
 using QQBotNet.Core.Utils;
 using WebSocket4Net;
-using SuperSocket.ClientEngine;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text.Json;
-using QQBotNet.Core.Entity;
-using System.Timers;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Reflection;
 
 namespace QQBotNet.Core.Services;
 
-public sealed class WebSocketService : IBotService, IWebSocketService
+public sealed class WebSocketService : IBotService
 {
     public readonly WebSocket WebSocketClient;
-
-    public event EventHandler<MessageReceivedEventArgs>? RawMessageReceived;
-    public event EventHandler<BotMessageEventArgs>? BotMessageReceived;
-    public event EventHandler<PacketSentEventArgs>? Sent;
-    public event EventHandler<EventArgs>? Opened;
-    public event EventHandler<EventArgs>? Closed;
-    public event EventHandler<ErrorEventArgs>? Error;
-    public event EventHandler<EventArgs>? Heartbeat;
-
-    internal readonly SensitiveInfo Info;
 
     private readonly Dictionary<OperationCode, IOperation> _operations;
 
@@ -39,11 +28,14 @@ public sealed class WebSocketService : IBotService, IWebSocketService
     /// <summary>
     /// 心跳间隔
     /// </summary>
-    public int HeartbeatInterval
-    {
-        get => _heartbeatInterval;
-        internal set => _heartbeatInterval = value;
-    }
+    public int HeartbeatInterval { get; internal set; }
+
+    /// <summary>
+    /// 会话信息
+    /// </summary>
+    public Session? Session;
+
+    private readonly BotInstance _instance;
 
     /// <summary>
     /// 当前WebSocket连接地址
@@ -52,21 +44,24 @@ public sealed class WebSocketService : IBotService, IWebSocketService
 
     internal Timer? _timer;
 
-    private int _heartbeatInterval;
-
-    internal WebSocketService(SensitiveInfo info, string url)
+    internal WebSocketService(BotInstance instance, string url)
     {
         if (url is null)
         {
             throw new ArgumentNullException(nameof(url));
         }
 
+        _instance = instance;
+        Url = url;
+
         WebSocketClient = new(url);
+
+        WebSocketClient.Opened += (_, e) => _instance.Invoker.OnWebSocketOpened();
+        WebSocketClient.Closed += (_, e) => _instance.Invoker.OnWebSocketClosed();
+        WebSocketClient.Error += (_, e) => _instance.Invoker.OnWebSocketError(e);
         WebSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
-        WebSocketClient.MessageReceived += (_, e) => RawMessageReceived?.Invoke(this, e);
-        WebSocketClient.Opened += (_, e) => Opened?.Invoke(this, e);
-        WebSocketClient.Closed += (_, e) => Closed?.Invoke(this, e);
-        WebSocketClient.Error += (_, e) => Error?.Invoke(this, e);
+        WebSocketClient.MessageReceived += (_, e) =>
+            _instance.Invoker.OnWebSocketRawMessageReceived(e);
 
         _operations = new();
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
@@ -81,8 +76,6 @@ public sealed class WebSocketService : IBotService, IWebSocketService
                 _operations.Add(attribute.Operation, (IOperation)Activator.CreateInstance(type)!);
             }
         }
-        Info = info;
-        Url = url;
     }
 
     public void Dispose()
@@ -100,10 +93,7 @@ public sealed class WebSocketService : IBotService, IWebSocketService
         WebSocketClient.Close();
     }
 
-    /// <summary>
-    /// 处理数据包
-    /// </summary>
-    internal async Task HandlePacket(MessageReceivedEventArgs e)
+    private async Task HandlePacket(MessageReceivedEventArgs e)
     {
         var packet = JsonSerializer.Deserialize<Packet>(e.Message);
         if (packet is not null)
@@ -112,12 +102,12 @@ public sealed class WebSocketService : IBotService, IWebSocketService
                 _operations.TryGetValue(packet.OperationCode, out IOperation? operation)
                 && operation is not null
             )
-                await operation.HandleOperationAsync(packet, this);
+                await operation.HandleOperationAsync(packet, _instance);
 
             if (packet.SerialNumber is not null)
                 SerialNumber = packet.SerialNumber.Value;
 
-            BotMessageReceived?.Invoke(this, new(packet.OperationCode, packet.Data, packet.Type));
+            _instance.Invoker.OnPacketReceived(new(packet));
         }
     }
 
@@ -136,13 +126,22 @@ public sealed class WebSocketService : IBotService, IWebSocketService
                 )
         );
 
-        Sent?.Invoke(this, new(packet));
+        _instance.Invoker.OnPacketSent(new(packet));
+    }
+
+    /// <summary>
+    /// 设置会话
+    /// </summary>
+    /// <param name="session">会话对象</param>
+    internal void SetSession(Session? session)
+    {
+        Session = session;
     }
 
     /// <summary>
     /// 启动定时器
     /// </summary>
-    public void StartTimer()
+    internal void StartTimer()
     {
         _timer?.Dispose();
         _timer = new(HeartbeatInterval);
@@ -155,6 +154,6 @@ public sealed class WebSocketService : IBotService, IWebSocketService
         await SendPacket(
             new() { OperationCode = OperationCode.Heartbeat, Data = JsonValue.Create(SerialNumber) }
         );
-        Heartbeat?.Invoke(this, new());
+        _instance.Invoker.OnHeartbeat();
     }
 }

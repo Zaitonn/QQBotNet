@@ -1,14 +1,14 @@
 using System;
 
-namespace QQBotNet.Core.Services.Operations.DispatchHandlers;
+namespace QQBotNet.Core.Services.Operations.DispatchEvent;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class DispatchHandlerAttribute : Attribute
 {
-    public DispatchHandlerAttribute(string eventType)
+    public DispatchHandlerAttribute(DispatchEventType dispatchEvent)
     {
-        EventType = eventType;
+        Event = dispatchEvent;
     }
 
-    public readonly string EventType;
+    public readonly DispatchEventType Event;
 }

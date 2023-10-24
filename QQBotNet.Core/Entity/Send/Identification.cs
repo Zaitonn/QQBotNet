@@ -1,25 +1,22 @@
+using QQBotNet.Core.Entity.WebSockets;
 using System;
-using System.Text.Json.Serialization;
 
-namespace QQBotNet.Core.Entity.WebSockets;
+namespace QQBotNet.Core.Entity.Send;
 
 public class Identification
 {
     /// <summary>
     /// 连接凭证
     /// </summary>
-    [JsonInclude]
     public string Token { get; set; } = string.Empty;
 
     /// <summary>
     /// 此次连接所需要接收的事件
     /// </summary>
-    [JsonInclude]
     public EventIntent Intents { get; set; }
 
     /// <summary>
     /// 分片逻辑
     /// </summary>
-    [JsonInclude]
     public int[] Shard { get; set; } = Array.Empty<int>();
 }

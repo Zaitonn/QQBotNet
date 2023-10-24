@@ -11,16 +11,14 @@ public sealed partial class HttpService : IBotService
 
     public readonly HttpClient InterfaceHttpClient;
 
-    private readonly SensitiveInfo _info;
-
     private readonly Timer _timer;
+
+    private readonly BotInstance _instance;
 
     public string AccessToken { get; private set; } = string.Empty;
 
-    internal HttpService(SensitiveInfo info, bool isSandbox)
+    internal HttpService(BotInstance instance, bool isSandbox)
     {
-        _info = info;
-
         AuthenticationHttpClient = new();
         InterfaceHttpClient = new()
         {
@@ -29,11 +27,13 @@ public sealed partial class HttpService : IBotService
         InterfaceHttpClient.DefaultRequestHeaders.Clear();
         InterfaceHttpClient.DefaultRequestHeaders.TryAddWithoutValidation(
             "X-Union-Appid",
-            _info.BotAppId
+            instance.BotAppId
         );
 
         _timer = new(60_000);
         _timer.Elapsed += async (_, _) => await GetAppAccessToken();
+
+        _instance = instance;
     }
 
     public void Dispose()

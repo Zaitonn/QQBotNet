@@ -23,8 +23,8 @@ jobs:
           cd ./QQBotNet.Core
           dotnet build --configuration Release
           dotnet pack --configuration Release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-          ls
           ls ./bin/Release/
+          cd ../
 
       - name: Install Nuget
         uses: nuget/setup-nuget@v1

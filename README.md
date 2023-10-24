@@ -36,7 +36,7 @@ dotnet add package QQBotNet.Core
 
 🚧暂未完工
 
-```ps
+```txt
 C:\>QQBotNet.OneBot.exe -h
 Description:
   QQBot的OneBot实现
@@ -49,7 +49,7 @@ Options:
   -?, -h, --help  Show help and usage information
 
 Commands:
-  init                                   创建"appsettings.json"
+  init                                   创建"config.json"
   run <botAppId> <botToken> <botSecret>  使用命令行参数运行
 
 ```
@@ -57,7 +57,7 @@ Commands:
 ### 进度
 
 - 传参
-  - [x] `appsettings.json`
+  - [x] `config.json`
   - [x] 命令行参数`run`
 - 通信
   - [ ] Http

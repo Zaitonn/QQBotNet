@@ -45,6 +45,11 @@ public enum EventIntent
     AudioOrLiveChannelMember = 1 << 19,
 
     /// <summary>
+    /// 用户在群聊@机器人发送消息 或 用户在单聊发送消息给机器人
+    /// </summary>
+    GroupAtMessageOrPrivateMessage = 1 << 25,
+
+    /// <summary>
     /// 互动事件
     /// </summary>
     Interaction = 1 << 26,

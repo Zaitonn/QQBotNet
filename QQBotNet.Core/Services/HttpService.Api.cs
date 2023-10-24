@@ -1,3 +1,4 @@
+using QQBotNet.Core.Constants;
 using QQBotNet.Core.Entity.Back;
 using QQBotNet.Core.Entity.Send;
 using QQBotNet.Core.Utils;
@@ -18,8 +19,12 @@ public sealed partial class HttpService : IBotService
     {
         string response = await (
             await AuthenticationHttpClient.PostJsonAsync(
-                "https://bots.qq.com/app/getAppAccessToken",
-                new Authentication { AppId = _info.BotAppId, ClientSecret = _info.BotSecret },
+                Urls.AccessTokenUrl,
+                new Authentication
+                {
+                    AppId = _instance.BotAppId,
+                    ClientSecret = _instance.BotSecret
+                },
                 JsonSerializerOptionsFactory.CamelCase
             )
         ).Content.ReadAsStringAsync();

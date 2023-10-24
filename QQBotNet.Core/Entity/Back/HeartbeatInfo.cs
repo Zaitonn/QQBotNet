@@ -1,6 +1,5 @@
-using System.Text.Json.Serialization;
 
-namespace QQBotNet.Core.Entity.WebSockets;
+namespace QQBotNet.Core.Entity.Back;
 
 public class HeartbeatInfo
 {
