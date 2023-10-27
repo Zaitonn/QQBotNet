@@ -1,5 +1,4 @@
-﻿using QQBotNet.Core.Entity;
-using QQBotNet.Core.Services;
+﻿using QQBotNet.Core.Services;
 using QQBotNet.Core.Services.Events;
 using System;
 using System.Threading.Tasks;
@@ -25,7 +24,7 @@ public sealed class BotInstance : IDisposable
     ///  <summary>
     /// 开发者ID
     /// </summary>
-    public readonly string BotAppId;
+    public readonly uint BotAppId;
 
     /// <summary>
     /// 机器人令牌
@@ -46,9 +45,8 @@ public sealed class BotInstance : IDisposable
     /// <param name="botToken">机器人令牌</param>
     /// <param name="botSecret">机器人密钥</param>
     /// <param name="isSandbox">是否为沙箱环境</param>
-    public BotInstance(string botAppId, string botToken, string botSecret, bool isSandbox = false)
+    public BotInstance(uint botAppId, string botToken, string botSecret, bool isSandbox = false)
     {
-        EnsureNotEmptyOrNull(botAppId, nameof(botAppId));
         EnsureNotEmptyOrNull(botToken, nameof(botToken));
         EnsureNotEmptyOrNull(botSecret, nameof(botSecret));
 

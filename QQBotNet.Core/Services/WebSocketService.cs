@@ -1,8 +1,6 @@
-using QQBotNet.Core.Entity;
-using QQBotNet.Core.Entity.Back;
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Services.Operations;
-using QQBotNet.Core.Utils;
 using WebSocket4Net;
 using System;
 using System.Collections.Generic;
@@ -11,6 +9,8 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Text.Encodings.Web;
 
 namespace QQBotNet.Core.Services;
 
@@ -33,9 +33,16 @@ public sealed class WebSocketService : IBotService
     /// <summary>
     /// 会话信息
     /// </summary>
-    public Session? Session;
+    public Session? Session { get; internal set; }
 
     private readonly BotInstance _instance;
+
+    private static readonly JsonSerializerOptions _packetJsonSerializerOptions =
+        new()
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+        };
 
     /// <summary>
     /// 当前WebSocket连接地址
@@ -78,20 +85,11 @@ public sealed class WebSocketService : IBotService
         }
     }
 
-    public void Dispose()
-    {
-        WebSocketClient.Dispose();
-    }
+    public void Dispose() => WebSocketClient.Dispose();
 
-    public void Start()
-    {
-        WebSocketClient.Open();
-    }
+    public void Start() => WebSocketClient.Open();
 
-    public void Stop()
-    {
-        WebSocketClient.Close();
-    }
+    public void Stop() => WebSocketClient.Close();
 
     private async Task HandlePacket(MessageReceivedEventArgs e)
     {
@@ -121,21 +119,10 @@ public sealed class WebSocketService : IBotService
         packet.Type = null;
         await Task.Run(
             () =>
-                WebSocketClient.Send(
-                    JsonSerializer.Serialize(packet, JsonSerializerOptionsFactory.IgnoreNull)
-                )
+                WebSocketClient.Send(JsonSerializer.Serialize(packet, _packetJsonSerializerOptions))
         );
 
         _instance.Invoker.OnPacketSent(new(packet));
-    }
-
-    /// <summary>
-    /// 设置会话
-    /// </summary>
-    /// <param name="session">会话对象</param>
-    internal void SetSession(Session? session)
-    {
-        Session = session;
     }
 
     /// <summary>

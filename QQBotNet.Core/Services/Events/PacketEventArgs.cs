@@ -1,11 +1,11 @@
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using System;
 
 namespace QQBotNet.Core.Services.Events;
 
 public class PacketEventArgs : EventArgs
 {
-    public PacketEventArgs(Packet packet)
+    internal PacketEventArgs(Packet packet)
     {
         Packet = packet;
     }

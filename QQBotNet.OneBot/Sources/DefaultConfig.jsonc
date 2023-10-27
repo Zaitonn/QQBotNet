@@ -1,0 +1,66 @@
+{
+    //  [[README]]
+    //  @version 0.0.2-alpha
+    //  - 这是QQBotNet.Onebot的默认配置文件。
+    //  - 推荐使用Visual Studio Code等文本编辑器编辑，不推荐使用记事本（除非你熟悉JSON语法）
+    //  - 文件语言选择"JSON5"或"JSON with Comments"以支持注释
+    /**
+     *  [机器人信息]
+     *      - 具体值可在<https://q.qq.com/bot/#/developer/developer-setting>查看
+     */
+    "botInfo": {
+        "botAppId": 0, // 开发者ID，格式应为10xxxxxxx
+        "botToken": "", // 机器人令牌
+        "botSecret": "" // 机器人密钥
+    },
+    /**
+     *  [使用环境变量作为帐号的输入]
+     *      - 若启用将忽略以上配置
+     *      - 将从环境变量中选取"QQBOTNET_APPID"、"QQBOTNET_TOKEN"和"QQBOTNET_SECRET"作为以上三项的值
+     */
+    "useEnvironmentVariables": false,
+    /**
+     *  [使用沙盒环境]
+     *      - 将影响Api的使用权限
+     *      - 详见<https://bot.q.qq.com/wiki/develop/api/#%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E>
+     */
+    "sandbox": false,
+    /**
+     *   [连接方式]
+     *      - "type"  连接类型 允许的值如下
+     *          - "http"                HttpApi服务器       <https://github.com/botuniverse/onebot-11/blob/master/communication/http.md>
+     *          - "http-post"           反向Http Post       <https://github.com/botuniverse/onebot-11/blob/master/communication/http-post.md>
+     *          - "websocket"           正向WebSocket服务器 <https://github.com/botuniverse/onebot-11/blob/master/communication/ws.md>
+     *          - "reverse-websocket"   反向WebSocket       <https://github.com/botuniverse/onebot-11/blob/master/communication/ws-reverse.md>
+     *      - "address"  连接地址
+     *          - 对于"http"和"websocket"，若需开放到公网，则其IP应为"0.0.0.0"，且在运行时选择易管理员方式启动（系统权限限制）并开启防火墙
+     *      - "authorization" 鉴权内容（可为null）
+     */
+    "connections": [
+        {
+            "type": "http",
+            "enable": false,
+            "address": "http://127.0.0.1:6700",
+            "authorization": null
+        },
+        {
+            "type": "http-post",
+            "enable": true,
+            "address": "http://127.0.0.1:8081",
+            "authorization": null
+        },
+        {
+            "type": "websocket",
+            "enable": false,
+            "address": "ws://127.0.0.1:8080",
+            "authorization": null
+        },
+        {
+            "type": "reverse-websocket",
+            "enable": true,
+            "address": "http://127.0.0.1:1145",
+            "authorization": null
+        }
+    ],
+    "debugLog": false
+}

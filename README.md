@@ -2,8 +2,6 @@
 
 # QQBotNet
 
-QQ机器人的**非官方**C# SDK
-
 [![Nuget](https://img.shields.io/nuget/v/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
 [![C#](https://img.shields.io/badge/Core-%20.NET_6-blue)](#qqbotnet)
@@ -14,6 +12,8 @@ QQ机器人的**非官方**C# SDK
 >此仓库和腾讯公司没有从属关系，仅作个人学习开发和使用。
 
 ## QQBotNet.Core
+
+QQ机器人的**非官方**C# SDK
 
 🚧暂未完工
 
@@ -34,7 +34,7 @@ dotnet add package QQBotNet.Core
 
 ## QQBotNet.OneBot
 
-🚧暂未完工
+QQ机器人基于Net6.0的实现（🚧暂未完工）
 
 ```txt
 C:\>QQBotNet.OneBot.exe -h
@@ -49,7 +49,7 @@ Options:
   -?, -h, --help  Show help and usage information
 
 Commands:
-  init                                   创建"config.json"
+  cfg                                    创建"config.json"
   run <botAppId> <botToken> <botSecret>  使用命令行参数运行
 
 ```
@@ -61,9 +61,9 @@ Commands:
   - [x] 命令行参数`run`
 - 通信
   - [ ] Http
-  - [ ] Http-Post
+  - [x] Http-Post
   - [ ] 正向WebSocket
-  - [ ] 反向WebSocket
+  - [x] 反向WebSocket
 - 事件
   - [ ] 收到消息
 - API

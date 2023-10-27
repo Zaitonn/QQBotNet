@@ -1,4 +1,4 @@
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Services.Operations.DispatchEvent;
 using System.Collections.Generic;
 using System.Threading.Tasks;

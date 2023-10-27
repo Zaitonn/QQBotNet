@@ -1,6 +1,5 @@
 using QQBotNet.Core.Constants;
-using QQBotNet.Core.Entity.Back;
-using QQBotNet.Core.Entity.Send;
+using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Utils;
 using QQBotNet.Core.Utils.Extensions;
 using System;
@@ -22,7 +21,7 @@ public sealed partial class HttpService : IBotService
                 Urls.AccessTokenUrl,
                 new Authentication
                 {
-                    AppId = _instance.BotAppId,
+                    AppId = _instance.BotAppId.ToString(),
                     ClientSecret = _instance.BotSecret
                 },
                 JsonSerializerOptionsFactory.CamelCase
@@ -35,7 +34,7 @@ public sealed partial class HttpService : IBotService
         var result =
             JsonSerializer.Deserialize<AuthenticationResult>(
                 response,
-                JsonSerializerOptionsFactory.SnakeCase
+                JsonSerializerOptionsFactory.UnsafeSnakeCase
             ) ?? throw new NullReferenceException($"Empty response in {nameof(GetAppAccessToken)}");
 
         AccessToken = result.AccessToken;

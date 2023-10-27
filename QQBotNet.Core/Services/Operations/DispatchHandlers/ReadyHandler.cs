@@ -1,5 +1,5 @@
-using QQBotNet.Core.Entity.Back;
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Utils;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -11,10 +11,14 @@ public class ReadyHandler : IOperation
 {
     public Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
     {
-        botInstance.WebSocketService?.StartTimer();
-        botInstance.WebSocketService?.SetSession(
-            JsonSerializer.Deserialize<Session>(packet.Data, JsonSerializerOptionsFactory.SnakeCase)
-        );
+        if (botInstance.WebSocketService is not null)
+        {
+            botInstance.WebSocketService.StartTimer();
+            botInstance.WebSocketService.Session = JsonSerializer.Deserialize<Session>(
+                packet.Data,
+                JsonSerializerOptionsFactory.UnsafeSnakeCase
+            );
+        }
         return Task.CompletedTask;
     }
 }

@@ -1,9 +1,12 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using QQBotNet.OneBot.Entity.Config;
+using QQBotNet.OneBot.Models.Config;
+using QQBotNet.OneBot.Network;
+using QQBotNet.OneBot.Utils;
+using Spectre.Console;
 using System;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace QQBotNet.OneBot;
@@ -12,7 +15,7 @@ public sealed class QQBotNetAppBuilder
 {
     private IServiceCollection Services => _hostAppBuilder.Services;
 
-    private readonly AppConfig _appSettings;
+    private readonly AppConfig _appConfig;
 
     private readonly HostApplicationBuilder _hostAppBuilder;
 
@@ -22,15 +25,30 @@ public sealed class QQBotNetAppBuilder
 
         if (File.Exists("config.json"))
         {
-            _appSettings =
-                JsonSerializer.Deserialize<AppConfig>(File.ReadAllText("config.json"))
-                ?? throw new JsonException("转换\"config.json\"出现空值");
+            _appConfig =
+                JsonSerializer.Deserialize<AppConfig>(
+                    File.ReadAllText("config.json"),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    }
+                ) ?? throw new JsonException("转换\"config.json\"出现空值");
         }
         else
-            throw new NotSupportedException(
-                "缺少\"config.json\"。"
-                    + "请使用\"QQBotNet.OneBot init\"命令创建此文件或使用\"QQBotNet.OneBot run\"直接传递登录信息"
+        {
+            Logger.Error<QQBotNetAppBuilder>(
+                "Tips: 请使用\"QQBotNet.OneBot init\"命令创建此文件或使用\"QQBotNet.OneBot run\"直接传递登录信息",
+                new NotSupportedException("缺少\"config.json\"。")
             );
+            if (AnsiConsole.Profile.Capabilities.Interactive && !Console.IsInputRedirected)
+            {
+                Console.ReadKey();
+            }
+            Environment.Exit(-1);
+        }
 
         AddService();
     }
@@ -38,14 +56,28 @@ public sealed class QQBotNetAppBuilder
     internal QQBotNetAppBuilder(AppConfig appConfig)
     {
         _hostAppBuilder = new();
-        _appSettings = appConfig;
+        _appConfig = appConfig;
         AddService();
     }
 
     private void AddService()
     {
-        Services.AddSingleton(_appSettings);
+        foreach (var connection in _appConfig.Connections)
+        {
+            IOneBotService? service = connection.Type switch
+            {
+                "http-post" => new HttpPostService(_appConfig.BotInfo.BotAppId, connection),
+                "reverse-websocket"
+                    => new ReverseWSService(_appConfig.BotInfo.BotAppId, connection),
+                _ => null
+            };
+
+            if (service is null)
+                Logger.Warn<QQBotNetAppBuilder>($"配置项中发现未知的连接类型: {connection.Type}");
+            else
+                Services.AddSingleton(service);
+        }
     }
 
-    public QQBotNetApp Build() => new(_hostAppBuilder.Build());
+    public QQBotNetApp Build() => new(_hostAppBuilder.Build(), _appConfig);
 }

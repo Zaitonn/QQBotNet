@@ -1,4 +1,4 @@
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using System;
 
 namespace QQBotNet.Core.Services.Operations;

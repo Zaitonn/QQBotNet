@@ -23,23 +23,48 @@ public class EventInvoker : IEventInvoker
         _botInstance = botInstance;
     }
 
-    internal void OnWebSocketOpened() => WebSocketOpened?.Invoke(_botInstance, new());
+    internal void OnWebSocketOpened()
+    {
+        WebSocketOpened?.Invoke(_botInstance, new());
+    }
 
-    internal void OnWebSocketClosed() => WebSocketClosed?.Invoke(_botInstance, new());
+    internal void OnWebSocketClosed()
+    {
+        WebSocketClosed?.Invoke(_botInstance, new());
+    }
 
-    internal void OnWebSocketError(ErrorEventArgs e) => WebSocketError?.Invoke(_botInstance, e);
+    internal void OnWebSocketError(ErrorEventArgs e)
+    {
+        WebSocketError?.Invoke(_botInstance, e);
+    }
 
-    internal void OnWebSocketReconnect() => WebSocketReconnect?.Invoke(_botInstance, new());
+    internal void OnWebSocketReconnect()
+    {
+        WebSocketReconnect?.Invoke(_botInstance, new());
+    }
 
-    internal void OnWebSocketRawMessageReceived(MessageReceivedEventArgs e) =>
+    internal void OnWebSocketRawMessageReceived(MessageReceivedEventArgs e)
+    {
         WebSocketRawMessageReceived?.Invoke(_botInstance, e);
+    }
 
-    internal void OnPacketSent(PacketEventArgs e) => PacketSent?.Invoke(_botInstance, e);
+    internal void OnPacketSent(PacketEventArgs e)
+    {
+        PacketSent?.Invoke(_botInstance, e);
+    }
 
-    internal void OnPacketReceived(PacketEventArgs e) => PacketReceived?.Invoke(_botInstance, e);
+    internal void OnPacketReceived(PacketEventArgs e)
+    {
+        PacketReceived?.Invoke(_botInstance, e);
+    }
 
-    internal void OnHeartbeat() { }
+    internal void OnHeartbeat()
+    {
+        Heartbeat?.Invoke(_botInstance, new());
+    }
 
-    internal void OnBotDispatchEventReceived(BotDispatchEventReceivedEventArgs e) =>
+    internal void OnBotDispatchEventReceived(BotDispatchEventReceivedEventArgs e)
+    {
         BotDispatchEventReceived?.Invoke(_botInstance, e);
+    }
 }

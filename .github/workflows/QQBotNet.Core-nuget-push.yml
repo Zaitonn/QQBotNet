@@ -2,9 +2,9 @@ name: QQBotNet.Core NuGet Push
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
+
   workflow_dispatch:
-  
 
 jobs:
   build:
@@ -23,13 +23,13 @@ jobs:
           cd ./QQBotNet.Core
           dotnet build --configuration Release
           dotnet pack --configuration Release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-          ls ./bin/Release/
+          ls ./bin -d 20
           cd ../
 
       - name: Install Nuget
         uses: nuget/setup-nuget@v1
         with:
-          nuget-version: '5.x'
+          nuget-version: "5.x"
 
       - name: Add private GitHub registry to NuGet
         run: |
@@ -37,5 +37,5 @@ jobs:
 
       - name: Push generated package to GitHub registry and NuGet
         run: |
-          dotnet nuget push ./QQBotNet.Core/bin/Release/*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
           nuget push ./QQBotNet.Core/bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}
+          dotnet nuget push ./QQBotNet.Core/bin/Release/*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}

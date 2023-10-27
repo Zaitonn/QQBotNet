@@ -2,10 +2,10 @@ using System;
 
 namespace QQBotNet.Core.Services.Operations.DispatchEvent;
 
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 public class DispatchHandlerAttribute : Attribute
 {
-    public DispatchHandlerAttribute(DispatchEventType dispatchEvent)
+    internal DispatchHandlerAttribute(DispatchEventType dispatchEvent)
     {
         Event = dispatchEvent;
     }

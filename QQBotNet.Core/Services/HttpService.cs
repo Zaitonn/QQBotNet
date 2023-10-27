@@ -1,5 +1,4 @@
 using QQBotNet.Core.Constants;
-using QQBotNet.Core.Entity;
 using System.Net.Http;
 using System.Timers;
 
@@ -27,7 +26,7 @@ public sealed partial class HttpService : IBotService
         InterfaceHttpClient.DefaultRequestHeaders.Clear();
         InterfaceHttpClient.DefaultRequestHeaders.TryAddWithoutValidation(
             "X-Union-Appid",
-            instance.BotAppId
+            instance.BotAppId.ToString()
         );
 
         _timer = new(60_000);

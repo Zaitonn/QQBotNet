@@ -13,10 +13,13 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0-rc.2.23479.6" />
+        <PackageReference Include="Spectre.Console" Version="0.47.0" />
+        <PackageReference Include="Spectre.Console.Json" Version="0.47.0" />
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
     <ItemGroup>
+		<EmbeddedResource Include="Sources/DefaultConfig.jsonc" />
         <ProjectReference Include="../QQBotNet.Core/QQBotNet.Core.csproj" />
     </ItemGroup>
 </Project>

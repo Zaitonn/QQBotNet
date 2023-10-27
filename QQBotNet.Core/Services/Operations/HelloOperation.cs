@@ -1,6 +1,5 @@
-using QQBotNet.Core.Entity.Back;
-using QQBotNet.Core.Entity.Send;
-using QQBotNet.Core.Entity.WebSockets;
+using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Utils;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,14 +19,14 @@ public class HelloOperation : IOperation
                     Data = JsonSerializer.SerializeToNode(
                         new Identification
                         {
-                            Token = $"{botInstance.BotAppId}.{botInstance.BotToken}", // 啥b
+                            Token = $"{botInstance.BotAppId}.{botInstance.BotToken}",
                             Shard = new[] { 0, 1 },
                             Intents =
                                 EventIntent.ForumEvent
                                 | EventIntent.GuildMessages
                                 | EventIntent.GuildMessageReactions,
                         },
-                        JsonSerializerOptionsFactory.SnakeCase
+                        JsonSerializerOptionsFactory.UnsafeSnakeCase
                     )
                 }
             );
@@ -43,14 +42,14 @@ public class HelloOperation : IOperation
                             SessionId = botInstance.WebSocketService.Session.SessionId,
                             Seq = botInstance.WebSocketService.SerialNumber
                         },
-                        JsonSerializerOptionsFactory.SnakeCase
+                        JsonSerializerOptionsFactory.UnsafeSnakeCase
                     )
                 }
             );
 
-        int? heartbeatInterval = packet.Data
-            .Deserialize<HeartbeatInfo>(JsonSerializerOptionsFactory.SnakeCase)
-            ?.HeartbeatInterval;
+        int? heartbeatInterval = packet
+            .Convert<HeartbeatInfo>(JsonSerializerOptionsFactory.UnsafeSnakeCase)
+            .Data?.HeartbeatInterval;
         botInstance.WebSocketService.HeartbeatInterval = heartbeatInterval ?? 0;
     }
 }

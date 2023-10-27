@@ -1,5 +1,5 @@
+using QQBotNet.Core.Models.Packets.WebSockets;
 using System.Threading.Tasks;
-using QQBotNet.Core.Entity.WebSockets;
 
 namespace QQBotNet.Core.Services.Operations;
 
