@@ -9,9 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "program": "${workspaceFolder}/QQBotNet.OneBot/bin/Debug/net6.0/QQBotNet.OneBot.dll",
-            "args": [
-                "init"
-            ],
+            "args": [],
             "cwd": "${workspaceFolder}/QQBotNet.OneBot/bin/Debug/net6.0/",
             "console": "externalTerminal",
             "stopAtEntry": false

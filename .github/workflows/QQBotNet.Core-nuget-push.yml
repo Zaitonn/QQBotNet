@@ -22,8 +22,8 @@ jobs:
         run: |
           cd ./QQBotNet.Core
           dotnet build --configuration Release
+          dotnet pack --configuration Release
           dotnet pack --configuration Release -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg
-          ls ./bin -d 20
           cd ../
 
       - name: Install Nuget
@@ -37,5 +37,6 @@ jobs:
 
       - name: Push generated package to GitHub registry and NuGet
         run: |
-          nuget push ./QQBotNet.Core/bin/Release/*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}
-          dotnet nuget push ./QQBotNet.Core/bin/Release/*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
+          ls .\QQBotNet.Core\bin -d 20
+          nuget push .\QQBotNet.Core\bin\Release\*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}
+          dotnet nuget push .\QQBotNet.Core\bin\Release\*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
