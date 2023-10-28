@@ -1,6 +1,6 @@
-namespace QQBotNet.Core.Constants;
+namespace QQBotNet.Core;
 
-public static class Urls
+public static class Constants
 {
     public const string Site = "api.sgroup.qq.com";
 

@@ -14,7 +14,7 @@ using System.Text.Encodings.Web;
 
 namespace QQBotNet.Core.Services;
 
-public sealed class WebSocketService : IBotService
+public sealed class WebSocketService
 {
     public readonly WebSocket WebSocketClient;
 
@@ -85,7 +85,11 @@ public sealed class WebSocketService : IBotService
         }
     }
 
-    public void Dispose() => WebSocketClient.Dispose();
+    public void Dispose()
+    {
+        WebSocketClient.Dispose();
+        _timer?.Dispose();
+    }
 
     public void Start() => WebSocketClient.Open();
 

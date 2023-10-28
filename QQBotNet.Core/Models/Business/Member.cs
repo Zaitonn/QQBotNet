@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Business.Members;
+namespace QQBotNet.Core.Models.Business;
 
 /// <summary>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/member/model.html#member</see>

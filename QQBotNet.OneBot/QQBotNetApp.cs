@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using QQBotNet.Core;
+using QQBotNet.Core.Services.Events;
 using QQBotNet.OneBot.Models.Config;
 using QQBotNet.OneBot.Utils;
 using System;
@@ -45,34 +46,36 @@ public sealed class QQBotNetApp : IHost
         GC.SuppressFinalize(this);
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken = default)
+    public Task StartAsync(CancellationToken cancellationToken = default)
     {
         Logger.Info<QQBotNetApp>("QQBotNet.OneBot已启动");
 
         try
         {
-            await _instance.StartAsync();
+            _instance.Start();
         }
         catch (Exception e)
         {
             Logger.Error<QQBotNetApp>($"启动机器人实例时出现问题:\n{e.Message}");
             Logger.Error<QQBotNetApp>("请检查必要信息是否填写正确");
-            return;
+            return Task.CompletedTask;
         }
 
         Logger.Info<QQBotNetApp>("机器人实例已启动");
 
         _instance.Invoker.WebSocketOpened += (_, _) =>
-            Logger.Info<QQBotNetApp>($"WebSocket: 已连接至\"{_instance.WebSocketUrl}\"");
+            Logger.Info<EventInvoker>($"WebSocket: 已连接至\"{_instance.WebSocketUrl}\"");
         _instance.Invoker.WebSocketError += (_, e) =>
-            Logger.Error<QQBotNetApp>("WebSocket: 出现错误", e.Exception);
+            Logger.Error<EventInvoker>("WebSocket: 出现错误", e.Exception);
         _instance.Invoker.PacketSent += (_, e) =>
-            Logger.Debug<QQBotNetApp>($"WebSocket: 发送消息:{JsonSerializer.Serialize(e.Packet)}");
+            Logger.Debug<EventInvoker>($"WebSocket: 发送消息:{JsonSerializer.Serialize(e.Packet)}");
         _instance.Invoker.WebSocketRawMessageReceived += (_, e) =>
-            Logger.Debug<QQBotNetApp>($"WebSocket: 接收消息:{e.Message}");
+            Logger.Debug<EventInvoker>($"WebSocket: 接收消息:{e.Message}");
 
-        _instance.Invoker.WebSocketClosed += (_, _) => Logger.Warn<QQBotNetApp>("WebSocket: 已断开");
-        _instance.Invoker.Heartbeat += (_, _) => Logger.Info<QQBotNetApp>("WebSocket: 接收到心跳事件");
+        _instance.Invoker.WebSocketClosed += (_, _) => Logger.Warn<EventInvoker>("WebSocket: 已断开");
+        _instance.Invoker.Heartbeat += (_, _) => Logger.Info<EventInvoker>("WebSocket: 接收到心跳事件");
+
+        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

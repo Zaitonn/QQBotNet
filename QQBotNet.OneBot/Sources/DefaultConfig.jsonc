@@ -58,7 +58,7 @@
         {
             "type": "reverse-websocket",
             "enable": true,
-            "address": "http://127.0.0.1:1145",
+            "address": "ws://127.0.0.1:1145",
             "authorization": null
         }
     ],

@@ -17,4 +17,10 @@ internal static class HttpClientExtension
         content.Headers.ContentType = new("application/json");
         return await httpClient.PostAsync(url, content);
     }
+
+    public static HttpContent WithJsonHeader(this HttpContent httpContent)
+    {
+        httpContent.Headers.ContentType = new("application/json");
+        return httpContent;
+    }
 }

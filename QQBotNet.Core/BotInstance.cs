@@ -1,15 +1,20 @@
 ﻿using QQBotNet.Core.Services;
 using QQBotNet.Core.Services.Events;
 using System;
-using System.Threading.Tasks;
 
 namespace QQBotNet.Core;
 
 public sealed class BotInstance : IDisposable
 {
-    public WebSocketService? WebSocketService;
+    /// <summary>
+    /// WebSocket服务
+    /// </summary>
+    public WebSocketService WebSocketService;
 
-    public HttpService? HttpService;
+    /// <summary>
+    /// Http服务
+    /// </summary>
+    public HttpService HttpService;
 
     /// <summary>
     /// 事件调用器
@@ -36,6 +41,9 @@ public sealed class BotInstance : IDisposable
     /// </summary>
     public readonly string BotSecret;
 
+    /// <summary>
+    /// WebSocket连接地址
+    /// </summary>
     public string? WebSocketUrl => WebSocketService?.Url;
 
     /// <summary>
@@ -55,17 +63,15 @@ public sealed class BotInstance : IDisposable
         BotSecret = botSecret;
         IsSandbox = isSandbox;
         Invoker = new(this);
+        HttpService = new(this, IsSandbox);
+        WebSocketService = new(this, HttpService.GetWebSocketUrl().GetAwaiter().GetResult());
     }
 
     /// <summary>
     /// 异步启动
     /// </summary>
-    public async Task StartAsync()
+    public void Start()
     {
-        HttpService = new(this, IsSandbox);
-        HttpService.Start();
-
-        WebSocketService = new(this, await HttpService.GetWebSocketUrl());
         WebSocketService.Start();
     }
 
@@ -75,12 +81,12 @@ public sealed class BotInstance : IDisposable
         WebSocketService?.Dispose();
     }
 
-    private static void EnsureNotEmptyOrNull(string? input, string name)
+    private static void EnsureNotEmptyOrNull(string? input, string paramName)
     {
         if (input is null)
-            throw new ArgumentNullException(name);
+            throw new ArgumentNullException(paramName);
 
         if (string.IsNullOrEmpty(input))
-            throw new ArgumentException($"{name} can't be empty.", name);
+            throw new ArgumentException($"{paramName} can't be empty.", paramName);
     }
 }

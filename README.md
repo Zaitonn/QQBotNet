@@ -1,17 +1,19 @@
-<div align="center">
 
 # QQBotNet
-
-[![Nuget](https://img.shields.io/nuget/v/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
-[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
-[![C#](https://img.shields.io/badge/Core-%20.NET_6-blue)](#qqbotnet)
-
-</div>
 
 > **WARNING**  
 >此仓库和腾讯公司没有从属关系，仅作个人学习开发和使用。
 
+## 目录
+
+- [QQBotNet.Core](#qqbotnetcore) QQ机器人的**非官方**C# SDK
+- [QQBotNet.OneBot](#qqbotnetonebot) QQ机器人基于Net6.0的OneBot实现
+
 ## QQBotNet.Core
+
+[![Nuget](https://img.shields.io/nuget/v/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
+[![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
+[![C#](https://img.shields.io/badge/Core-%20.NET_6-blue)](#qqbotnet)
 
 QQ机器人的**非官方**C# SDK
 
@@ -25,16 +27,18 @@ dotnet add package QQBotNet.Core
 
 ### 进度
 
-- Http
-  - [x] 获取Access Token
+- HttpApi
   - [x] 获取WebSocket接入点
+  - [x] 频道
+  - [x] 子频道
+  - [x] 用户
 - WebSocket
   - [x] 鉴权连接
   - [x] 维持心跳
 
 ## QQBotNet.OneBot
 
-QQ机器人基于Net6.0的实现（🚧暂未完工）
+QQ机器人基于Net6.0的OneBot实现（🚧暂未完工）
 
 ```txt
 C:\>QQBotNet.OneBot.exe -h

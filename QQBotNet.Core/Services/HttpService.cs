@@ -1,16 +1,10 @@
-using QQBotNet.Core.Constants;
 using System.Net.Http;
-using System.Timers;
 
 namespace QQBotNet.Core.Services;
 
-public sealed partial class HttpService : IBotService
+public sealed partial class HttpService
 {
-    public readonly HttpClient AuthenticationHttpClient;
-
-    public readonly HttpClient InterfaceHttpClient;
-
-    private readonly Timer _timer;
+    private readonly HttpClient _httpClient;
 
     private readonly BotInstance _instance;
 
@@ -18,37 +12,21 @@ public sealed partial class HttpService : IBotService
 
     internal HttpService(BotInstance instance, bool isSandbox)
     {
-        AuthenticationHttpClient = new();
-        InterfaceHttpClient = new()
-        {
-            BaseAddress = new($"https://{(isSandbox ? Urls.SandboxSite : Urls.Site)}")
-        };
-        InterfaceHttpClient.DefaultRequestHeaders.Clear();
-        InterfaceHttpClient.DefaultRequestHeaders.TryAddWithoutValidation(
-            "X-Union-Appid",
-            instance.BotAppId.ToString()
-        );
-
-        _timer = new(60_000);
-        _timer.Elapsed += async (_, _) => await GetAppAccessToken();
-
         _instance = instance;
+        _httpClient = new()
+        {
+            BaseAddress = new($"https://{(isSandbox ? Constants.SandboxSite : Constants.Site)}")
+        };
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Authorization = new(
+            "Bot",
+            $"{_instance.BotAppId}.{_instance.BotToken}"
+        );
+        _httpClient.DefaultRequestHeaders.Add("X-Union-Appid", _instance.BotAppId.ToString());
     }
 
     public void Dispose()
     {
-        InterfaceHttpClient.Dispose();
-        _timer.Dispose();
-    }
-
-    public void Start()
-    {
-        _timer.Start();
-        GetAppAccessToken().Wait();
-    }
-
-    public void Stop()
-    {
-        _timer.Stop();
+        _httpClient.Dispose();
     }
 }

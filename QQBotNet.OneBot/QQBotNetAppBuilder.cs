@@ -64,18 +64,32 @@ public sealed class QQBotNetAppBuilder
     {
         foreach (var connection in _appConfig.Connections)
         {
-            IOneBotService? service = connection.Type switch
+            IOneBotService? service;
+            try
             {
-                "http-post" => new HttpPostService(_appConfig.BotInfo.BotAppId, connection),
-                "reverse-websocket"
-                    => new ReverseWSService(_appConfig.BotInfo.BotAppId, connection),
-                _ => null
-            };
+                service = connection.Type switch
+                {
+                    "http-post" => new HttpPostService(_appConfig.BotInfo.BotAppId, connection),
+                    "reverse-websocket"
+                        => new ReverseWSService(_appConfig.BotInfo.BotAppId, connection),
+                    _ => null
+                };
+            }
+            catch (Exception e)
+            {
+                Logger.Warn<QQBotNetAppBuilder>($"初始化{connection.Type}服务时出现问题: {e.Message}");
+                continue;
+            }
 
             if (service is null)
                 Logger.Warn<QQBotNetAppBuilder>($"配置项中发现未知的连接类型: {connection.Type}");
             else
+            {
                 Services.AddSingleton(service);
+                Logger.Info<QQBotNetAppBuilder>(
+                    $"新的{connection.Type}的连接方式已添加（{connection.Address}）"
+                );
+            }
         }
     }
 

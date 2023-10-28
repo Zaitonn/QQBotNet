@@ -1,4 +1,3 @@
-using QQBotNet.Core.Models.Business.Members;
 using System;
 
 namespace QQBotNet.Core.Models.Business.Messages;
