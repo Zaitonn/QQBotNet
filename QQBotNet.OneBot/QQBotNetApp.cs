@@ -27,16 +27,11 @@ public sealed class QQBotNetApp : IHost
         _config = appConfig;
         try
         {
-            _instance = new(
-                _config.BotInfo.BotAppId,
-                _config.BotInfo.BotToken,
-                _config.BotInfo.BotSecret,
-                _config.Sandbox
-            );
+            _instance = new(_config.BotInfo.BotAppId, _config.BotInfo.BotToken, _config.Sandbox);
         }
-        catch (Exception e)
+        catch
         {
-            Logger.Warn<QQBotNetApp>($"初始化机器人实例时出现问题:\n{e.Message}");
+            Logger.Warn<QQBotNetApp>("\"botAppId\"或\"botToken\"不正确");
             throw;
         }
     }
@@ -65,6 +60,8 @@ public sealed class QQBotNetApp : IHost
 
         _instance.Invoker.WebSocketOpened += (_, _) =>
             Logger.Info<EventInvoker>($"WebSocket: 已连接至\"{_instance.WebSocketUrl}\"");
+        _instance.Invoker.WebSocketReconnect += (_, _) =>
+            Logger.Info<EventInvoker>($"WebSocket: 正在重连");
         _instance.Invoker.WebSocketError += (_, e) =>
             Logger.Error<EventInvoker>("WebSocket: 出现错误", e.Exception);
         _instance.Invoker.PacketSent += (_, e) =>

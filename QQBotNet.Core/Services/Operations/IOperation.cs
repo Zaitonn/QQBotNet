@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace QQBotNet.Core.Services.Operations;
 
+/// <summary>
+/// 操作接口
+/// </summary>
 public interface IOperation
 {
     /// <summary>

@@ -3,6 +3,9 @@ using System.Text.Json.Nodes;
 
 namespace QQBotNet.Core.Models.Packets.WebSockets;
 
+/// <summary>
+/// <inheritdoc/>
+/// </summary>
 public interface IPacket : IPacket<JsonNode>
 {
     /// <summary>
@@ -11,6 +14,10 @@ public interface IPacket : IPacket<JsonNode>
     public Packet<T> Convert<T>(JsonSerializerOptions? options = null);
 }
 
+/// <summary>
+/// 数据包接口
+/// </summary>
+/// <typeparam name="T">Data类型</typeparam>
 public interface IPacket<T>
 {
     /// <summary>

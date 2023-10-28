@@ -14,9 +14,12 @@ using System.Text.Encodings.Web;
 
 namespace QQBotNet.Core.Services;
 
+/// <summary>
+/// WebSocket服务
+/// </summary>
 public sealed class WebSocketService
 {
-    public readonly WebSocket WebSocketClient;
+    private readonly WebSocket _webSocketClient;
 
     private readonly Dictionary<OperationCode, IOperation> _operations;
 
@@ -61,13 +64,14 @@ public sealed class WebSocketService
         _instance = instance;
         Url = url;
 
-        WebSocketClient = new(url);
+        _webSocketClient = new(url);
 
-        WebSocketClient.Opened += (_, e) => _instance.Invoker.OnWebSocketOpened();
-        WebSocketClient.Closed += (_, e) => _instance.Invoker.OnWebSocketClosed();
-        WebSocketClient.Error += (_, e) => _instance.Invoker.OnWebSocketError(e);
-        WebSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
-        WebSocketClient.MessageReceived += (_, e) =>
+        _webSocketClient.Opened += (_, e) => _instance.Invoker.OnWebSocketOpened();
+        _webSocketClient.Closed += (_, e) => TryReconnect();
+        _webSocketClient.Closed += (_, e) => _instance.Invoker.OnWebSocketClosed();
+        _webSocketClient.Error += (_, e) => _instance.Invoker.OnWebSocketError(e);
+        _webSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
+        _webSocketClient.MessageReceived += (_, e) =>
             _instance.Invoker.OnWebSocketRawMessageReceived(e);
 
         _operations = new();
@@ -85,15 +89,25 @@ public sealed class WebSocketService
         }
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void Dispose()
     {
-        WebSocketClient.Dispose();
+        _webSocketClient.Dispose();
         _timer?.Dispose();
+        Session = null;
     }
 
-    public void Start() => WebSocketClient.Open();
+    /// <summary>
+    /// 启动WebSocket连接
+    /// </summary>
+    public void Start() => _webSocketClient.Open();
 
-    public void Stop() => WebSocketClient.Close();
+    /// <summary>
+    /// 关闭WebSocket连接
+    /// </summary>
+    public void Stop() => _webSocketClient.Close();
 
     private async Task HandlePacket(MessageReceivedEventArgs e)
     {
@@ -123,7 +137,9 @@ public sealed class WebSocketService
         packet.Type = null;
         await Task.Run(
             () =>
-                WebSocketClient.Send(JsonSerializer.Serialize(packet, _packetJsonSerializerOptions))
+                _webSocketClient.Send(
+                    JsonSerializer.Serialize(packet, _packetJsonSerializerOptions)
+                )
         );
 
         _instance.Invoker.OnPacketSent(new(packet));
@@ -146,5 +162,17 @@ public sealed class WebSocketService
             new() { OperationCode = OperationCode.Heartbeat, Data = JsonValue.Create(SerialNumber) }
         );
         _instance.Invoker.OnHeartbeat();
+    }
+
+    private void TryReconnect()
+    {
+        if (Session == null && _webSocketClient.State != WebSocketState.Closed)
+        {
+            return;
+        }
+
+        Task.Delay(5000).Wait();
+        _webSocketClient.Open();
+        _instance.Invoker.OnWebSocketReconnect();
     }
 }

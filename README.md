@@ -30,6 +30,7 @@ dotnet add package QQBotNet.Core
 - HttpApi
   - [x] 获取WebSocket接入点
   - [x] 频道
+  - [x] 权限组
   - [x] 子频道
   - [x] 用户
 - WebSocket

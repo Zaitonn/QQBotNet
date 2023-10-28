@@ -31,7 +31,7 @@ public class Channel
     public ChannelSubType SubType { get; set; }
 
     /// <summary>
-    /// 排序值 
+    /// 排序值
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/model.html#%E6%9C%89%E5%85%B3-position-%E7%9A%84%E8%AF%B4%E6%98%8E</see>
     /// </summary>

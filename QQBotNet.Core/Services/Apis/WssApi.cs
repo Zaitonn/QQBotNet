@@ -4,26 +4,27 @@ using System;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace QQBotNet.Core.Services;
+namespace QQBotNet.Core.Services.Apis;
 
-public sealed partial class HttpService
+/// <summary>
+/// WebSocket Api
+/// </summary>
+public static class WssApi
 {
     /// <summary>
     /// 获取通用 WSS 接入点
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/wss/url_get.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <returns>WSS 接入地址</returns>
-    public async Task<string> GetWebSocketUrl()
+    public static async Task<string?> GetWebSocketUrl(this HttpService httpService)
     {
-        var url = await _httpClient.GetFromJsonAsync<WebSocketUrl>(
+        var url = await httpService.HttpClient.GetFromJsonAsync<WebSocketUrl>(
             "/gateway",
             JsonSerializerOptionsFactory.UnsafeSnakeCase
         );
 
-        if (string.IsNullOrEmpty(url?.Url))
-            throw new NullReferenceException("Empty url");
-
-        return url!.Url;
+        return url?.Url;
     }
 }

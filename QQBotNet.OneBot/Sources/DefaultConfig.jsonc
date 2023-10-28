@@ -10,8 +10,7 @@
      */
     "botInfo": {
         "botAppId": 0, // 开发者ID，格式应为10xxxxxxx
-        "botToken": "", // 机器人令牌
-        "botSecret": "" // 机器人密钥
+        "botToken": "" // 机器人令牌
     },
     /**
      *  [使用环境变量作为帐号的输入]

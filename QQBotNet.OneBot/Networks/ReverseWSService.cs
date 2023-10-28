@@ -64,7 +64,9 @@ public sealed class ReverseWSService : OneBotServiceBase, IOneBotService
 
     public Task SendJsonAsync<T>(T json, CancellationToken cancellationToken)
     {
-        _websocket.Send(JsonSerializer.Serialize(json, JsonSerializerOptionsFactory.UnsafeSnakeCase));
+        _websocket.Send(
+            JsonSerializer.Serialize(json, JsonSerializerOptionsFactory.UnsafeSnakeCase)
+        );
         return Task.CompletedTask;
     }
 

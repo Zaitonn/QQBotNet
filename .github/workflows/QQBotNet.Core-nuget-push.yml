@@ -31,12 +31,11 @@ jobs:
         with:
           nuget-version: "5.x"
 
-      - name: Add private GitHub registry to NuGet
-        run: |
-          dotnet nuget add source --username Zaitonn --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Zaitonn/index.json"
+      # - name: Add private GitHub registry to NuGet
+      #   run: |
+      #     dotnet nuget add source --username Zaitonn --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/Zaitonn/index.json"
 
       - name: Push generated package to GitHub registry and NuGet
         run: |
-          ls .\QQBotNet.Core\bin -d 20
           nuget push .\QQBotNet.Core\bin\Release\*.nupkg -Source https://api.nuget.org/v3/index.json -SkipDuplicate -ApiKey ${{ secrets.NUGETAPIKEY }}
-          dotnet nuget push .\QQBotNet.Core\bin\Release\*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}
+        #  dotnet nuget push .\QQBotNet.Core\bin\Release\*.nupkg --source "github" --api-key ${{ secrets.GIT_TOKEN }}

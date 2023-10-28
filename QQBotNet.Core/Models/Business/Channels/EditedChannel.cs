@@ -1,5 +1,8 @@
 namespace QQBotNet.Core.Models.Business.Channels;
 
+/// <summary>
+/// 编辑的子频道
+/// </summary>
 public class EditedChannel
 {
     /// <summary>

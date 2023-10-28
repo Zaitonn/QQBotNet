@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Business;
+namespace QQBotNet.Core.Models.Business.Guilds;
 
 /// <summary>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/guild/model.html</see>

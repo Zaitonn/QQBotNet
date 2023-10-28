@@ -1,9 +1,16 @@
-﻿using QQBotNet.Core.Services;
+﻿using QQBotNet.Core.Models;
+using QQBotNet.Core.Services;
+using QQBotNet.Core.Services.Apis;
 using QQBotNet.Core.Services.Events;
+using QQBotNet.Core.Utils.Extensions;
 using System;
+using System.Net.Http;
 
 namespace QQBotNet.Core;
 
+/// <summary>
+/// 机器人实例
+/// </summary>
 public sealed class BotInstance : IDisposable
 {
     /// <summary>
@@ -37,11 +44,6 @@ public sealed class BotInstance : IDisposable
     public readonly string BotToken;
 
     /// <summary>
-    /// 机器人密钥
-    /// </summary>
-    public readonly string BotSecret;
-
-    /// <summary>
     /// WebSocket连接地址
     /// </summary>
     public string? WebSocketUrl => WebSocketService?.Url;
@@ -51,20 +53,29 @@ public sealed class BotInstance : IDisposable
     /// </summary>
     /// <param name="botAppId">开发者ID</param>
     /// <param name="botToken">机器人令牌</param>
-    /// <param name="botSecret">机器人密钥</param>
     /// <param name="isSandbox">是否为沙箱环境</param>
-    public BotInstance(uint botAppId, string botToken, string botSecret, bool isSandbox = false)
+    public BotInstance(uint botAppId, string botToken, bool isSandbox = false)
     {
         EnsureNotEmptyOrNull(botToken, nameof(botToken));
-        EnsureNotEmptyOrNull(botSecret, nameof(botSecret));
 
         BotAppId = botAppId;
         BotToken = botToken;
-        BotSecret = botSecret;
         IsSandbox = isSandbox;
         Invoker = new(this);
         HttpService = new(this, IsSandbox);
-        WebSocketService = new(this, HttpService.GetWebSocketUrl().GetAwaiter().GetResult());
+
+        try
+        {
+            WebSocketService = new(
+                this,
+                HttpService.GetWebSocketUrl().WaitResult()
+                    ?? throw new NotSupportedException("机器人WebSocket地址为空")
+            );
+        }
+        catch (Exception e)
+        {
+            throw new BotInstanceException("初始化失败", e);
+        }
     }
 
     /// <summary>
@@ -75,6 +86,9 @@ public sealed class BotInstance : IDisposable
         WebSocketService.Start();
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void Dispose()
     {
         HttpService?.Dispose();

@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace QQBotNet.Core.Services.Operations;
 
+/// <summary>
+/// <see cref="OperationCode.Hello"/>事件处理器
+/// </summary>
 [Operation(OperationCode.Hello)]
 public class HelloOperation : IOperation
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public async Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
     {
         if (botInstance.WebSocketService?.Session is null)

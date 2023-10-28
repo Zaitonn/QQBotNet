@@ -3,13 +3,19 @@ using System;
 
 namespace QQBotNet.Core.Services.Operations;
 
+/// <summary>
+/// 操作属性
+/// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public class OperationAttribute : Attribute
 {
-    public OperationAttribute(OperationCode operation)
+    internal OperationAttribute(OperationCode operation)
     {
         Operation = operation;
     }
 
+    /// <summary>
+    /// WebSocket数据包操作代码
+    /// </summary>
     public OperationCode Operation;
 }

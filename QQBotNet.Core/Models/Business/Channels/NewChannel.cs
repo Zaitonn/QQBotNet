@@ -2,6 +2,9 @@ using System;
 
 namespace QQBotNet.Core.Models.Business.Channels;
 
+/// <summary>
+/// 新建的子频道
+/// </summary>
 public class NewChannel
 {
     /// <summary>

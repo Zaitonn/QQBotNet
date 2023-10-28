@@ -1,32 +1,37 @@
+using System;
 using System.Net.Http;
 
 namespace QQBotNet.Core.Services;
 
-public sealed partial class HttpService
+/// <summary>
+/// Http服务
+/// </summary>
+public sealed class HttpService : IDisposable
 {
-    private readonly HttpClient _httpClient;
+    internal readonly HttpClient HttpClient;
 
     private readonly BotInstance _instance;
-
-    public string AccessToken { get; private set; } = string.Empty;
 
     internal HttpService(BotInstance instance, bool isSandbox)
     {
         _instance = instance;
-        _httpClient = new()
+        HttpClient = new()
         {
             BaseAddress = new($"https://{(isSandbox ? Constants.SandboxSite : Constants.Site)}")
         };
-        _httpClient.DefaultRequestHeaders.Clear();
-        _httpClient.DefaultRequestHeaders.Authorization = new(
+        HttpClient.DefaultRequestHeaders.Clear();
+        HttpClient.DefaultRequestHeaders.Authorization = new(
             "Bot",
             $"{_instance.BotAppId}.{_instance.BotToken}"
         );
-        _httpClient.DefaultRequestHeaders.Add("X-Union-Appid", _instance.BotAppId.ToString());
+        HttpClient.DefaultRequestHeaders.Add("X-Union-Appid", _instance.BotAppId.ToString());
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public void Dispose()
     {
-        _httpClient.Dispose();
+        HttpClient.Dispose();
     }
 }

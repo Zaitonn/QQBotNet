@@ -7,6 +7,9 @@ using System;
 
 namespace QQBotNet.Core.Services.Operations;
 
+/// <summary>
+/// <see cref="OperationCode.Dispatch"/>事件处理器
+/// </summary>
 [Operation(OperationCode.Dispatch)]
 public class DispatchOperation : IOperation
 {
@@ -26,6 +29,9 @@ public class DispatchOperation : IOperation
         }
     }
 
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public async Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
     {
         if (!Enum.TryParse(packet.Type, true, out DispatchEventType result))

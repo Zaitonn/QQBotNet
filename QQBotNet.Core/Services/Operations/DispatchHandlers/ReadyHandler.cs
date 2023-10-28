@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace QQBotNet.Core.Services.Operations.DispatchEvent;
 
+/// <summary>
+/// <see cref="DispatchEventType.READY"/>事件处理器
+/// </summary>
 [DispatchHandler(DispatchEventType.READY)]
 public class ReadyHandler : IOperation
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
     {
         if (botInstance.WebSocketService is not null)

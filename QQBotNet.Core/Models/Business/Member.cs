@@ -3,6 +3,8 @@ using System;
 namespace QQBotNet.Core.Models.Business;
 
 /// <summary>
+/// 成员
+/// <br/>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/member/model.html#member</see>
 /// </summary>
 public class Member

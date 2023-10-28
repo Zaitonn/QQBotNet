@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace QQBotNet.Core.Utils;
 
+/// <summary>
+/// Json序列化选项工厂
+/// </summary>
 public static class JsonSerializerOptionsFactory
 {
     /// <summary>

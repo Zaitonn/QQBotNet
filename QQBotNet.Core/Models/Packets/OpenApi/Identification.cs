@@ -2,6 +2,9 @@ using System;
 
 namespace QQBotNet.Core.Models.Packets.OpenApi;
 
+/// <summary>
+/// 连接凭证
+/// </summary>
 public class Identification
 {
     /// <summary>

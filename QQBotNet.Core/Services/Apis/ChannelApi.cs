@@ -8,9 +8,12 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
-namespace QQBotNet.Core.Services;
+namespace QQBotNet.Core.Services.Apis;
 
-public sealed partial class HttpService
+/// <summary>
+/// 子频道Api
+/// </summary>
+public static class ChannelApi
 {
     /// <summary>
     /// 获取子频道列表
@@ -19,12 +22,16 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/guild/get_guild.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="guildId">频道ID</param>
     /// <returns>Channel对象数组</returns>
-    public async Task<Channel[]?> GetChannelsAsync(string guildId)
+    public static async Task<Channel[]?> GetChannelsAsync(
+        this HttpService httpService,
+        string guildId
+    )
     {
-        return await _httpClient.GetFromJsonAsync<Channel[]>(
-            $"/guild_id/{guildId}/channels",
+        return await httpService.HttpClient.GetFromJsonAsync<Channel[]>(
+            $"/guilds/{guildId.Encode()}/channels",
             JsonSerializerOptionsFactory.UnsafeSnakeCase
         );
     }
@@ -36,12 +43,16 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/get_channel.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
     /// <returns>Channel对象</returns>
-    public async Task<Channel?> GetChannelAsync(string channelId)
+    public static async Task<Channel?> GetChannelAsync(
+        this HttpService httpService,
+        string channelId
+    )
     {
-        return await _httpClient.GetFromJsonAsync<Channel>(
-            $"/channels/{channelId}",
+        return await httpService.HttpClient.GetFromJsonAsync<Channel>(
+            $"/channels/{channelId.Encode()}",
             JsonSerializerOptionsFactory.UnsafeSnakeCase
         );
     }
@@ -53,14 +64,19 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/post_channels.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="guildId">频道ID</param>
     /// <param name="newChannel">子频道对象</param>
     /// <returns>Channel对象</returns>
-    public async Task<Channel?> CreateChannelAsync(string guildId, NewChannel newChannel)
+    public static async Task<Channel?> CreateChannelAsync(
+        this HttpService httpService,
+        string guildId,
+        NewChannel newChannel
+    )
     {
         return await (
-            await _httpClient.PostJsonAsync(
-                $"/guilds/{guildId}/channels",
+            await httpService.HttpClient.PostJsonAsync(
+                $"/guilds/{guildId.Encode()}/channels",
                 newChannel,
                 JsonSerializerOptionsFactory.UnsafeSnakeCase
             )
@@ -76,6 +92,7 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/patch_channel.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
     /// <param name="editedChannel">子频道对象</param>
     /// <returns>Channel对象</returns>
@@ -83,14 +100,18 @@ public sealed partial class HttpService
 #if NETFRAMEWORK
     [Obsolete("此版本的Net框架下不支持Patch方法", true)]
 #endif
-    public async Task<Channel?> EditChannelAsync(string channelId, EditedChannel editedChannel)
+    public static async Task<Channel?> EditChannelAsync(
+        this HttpService httpService,
+        string channelId,
+        EditedChannel editedChannel
+    )
     {
 #if NETFRAMEWORK
         throw new NotSupportedException("此版本的Net框架下不支持Patch方法");
 #else
         return await (
-            await _httpClient.SendAsync(
-                new(HttpMethod.Patch, $"/channels/{channelId}")
+            await httpService.HttpClient.SendAsync(
+                new(HttpMethod.Patch, $"/channels/{channelId.Encode()}")
                 {
                     Content = new StringContent(
                         JsonSerializer.Serialize(
@@ -113,11 +134,12 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/delete_channel.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
-    public async Task DeleteChannelAsync(string channelId)
+    public static async Task DeleteChannelAsync(this HttpService httpService, string channelId)
     {
-        await _httpClient.SendAsync(
-            new(HttpMethod.Delete, $"/channels/{channelId}")
+        await httpService.HttpClient.SendAsync(
+            new(HttpMethod.Delete, $"/channels/{channelId.Encode()}")
             {
                 Content = new StringContent(string.Empty).WithJsonHeader()
             }
@@ -131,13 +153,17 @@ public sealed partial class HttpService
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/get_online_nums.html</see>
     /// </summary>
+    /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
     /// <returns>在线成员数</returns>
-    public async Task<int> GetChannelOnlineNumAsync(string channelId)
+    public static async Task<int> GetChannelOnlineNumAsync(
+        this HttpService httpService,
+        string channelId
+    )
     {
         var responce = await (
-            await _httpClient.SendAsync(
-                new(HttpMethod.Get, $"/channels/{channelId}/online_nums")
+            await httpService.HttpClient.SendAsync(
+                new(HttpMethod.Get, $"/channels/{channelId.Encode()}/online_nums")
                 {
                     Content = new StringContent(string.Empty).WithJsonHeader()
                 }

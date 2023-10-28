@@ -2,6 +2,7 @@ namespace QQBotNet.Core.Models.Business;
 
 /// <summary>
 /// 用户对象
+/// <br/>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/user/model.html#user</see>
 /// </summary>
 public class User
@@ -27,7 +28,7 @@ public class User
     public bool Bot { get; set; }
 
     /// <summary>
-    /// 特殊关联应用的 openid，需要特殊申请并配置后才会返回。如需申请，请联系平台运营人员。
+    /// 特殊关联应用的openid，需要特殊申请并配置后才会返回。如需申请，请联系平台运营人员。
     /// </summary>
     /// <value></value>
     public string? UnionOpenid { get; set; }

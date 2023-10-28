@@ -2,6 +2,9 @@ using System;
 
 namespace QQBotNet.Core.Models.Business.Messages;
 
+/// <summary>
+/// <see>https://bot.q.qq.com/wiki/develop/api/openapi/message/model.html#messagearkkv</see>
+/// </summary>
 public class MessageArk
 {
     /// <summary>

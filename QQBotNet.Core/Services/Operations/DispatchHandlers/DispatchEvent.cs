@@ -5,6 +5,9 @@ namespace QQBotNet.Core.Services.Operations.DispatchEvent;
 /// </summary>
 public enum DispatchEventType
 {
+    /// <summary>
+    /// 空
+    /// </summary>
     Null,
 
     /// <summary>

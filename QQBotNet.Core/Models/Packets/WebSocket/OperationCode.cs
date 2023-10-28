@@ -1,5 +1,8 @@
 namespace QQBotNet.Core.Models.Packets.WebSockets;
 
+/// <summary>
+/// WebSocket数据包操作代码
+/// </summary>
 public enum OperationCode
 {
     /// <summary>

@@ -356,8 +356,7 @@ public enum ErrorCode
     ErrorInMarkdownTemplateType = 50054,
 }
 
-/**
-
+/*
 50049	只能修改含有 keyboard 元素的消息
 50050	修改消息时，keyboard 元素不能为空
 50051	只能修改机器人自己发送的消息

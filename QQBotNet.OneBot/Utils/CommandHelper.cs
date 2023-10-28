@@ -19,7 +19,6 @@ internal static class CommandHelper
 
         var botAppIdArgument = new Argument<uint>("botAppId", "机器人应用ID");
         var botTokenArgument = new Argument<string>("botToken", "机器人令牌");
-        var botSecretArgument = new Argument<string>("botSecret", "机器人密钥");
         var sandboxOption = new Option<bool>(new[] { "--sandbox", "-sb" }, "使用官方提供的沙箱环境");
 
         var httpOption = new Option<string[]>(new[] { "--http", "-ht" }, "正向HTTP地址")
@@ -48,7 +47,6 @@ internal static class CommandHelper
 
         runCommand.AddArgument(botAppIdArgument);
         runCommand.AddArgument(botTokenArgument);
-        runCommand.AddArgument(botSecretArgument);
         runCommand.AddOption(sandboxOption);
         runCommand.AddOption(httpOption);
         runCommand.AddOption(httpPostOption);
@@ -58,7 +56,6 @@ internal static class CommandHelper
             Entry,
             botAppIdArgument,
             botTokenArgument,
-            botSecretArgument,
             sandboxOption,
             httpOption,
             httpPostOption,
@@ -78,7 +75,6 @@ internal static class CommandHelper
     private static void Entry(
         uint botAppId,
         string botToken,
-        string botSecret,
         bool sandBox,
         string[] httpOption,
         string[] httpPostOption,
@@ -92,7 +88,6 @@ internal static class CommandHelper
             {
                 BotAppId = botAppId,
                 BotToken = botToken,
-                BotSecret = botSecret
             },
             Sandbox = sandBox,
             Connections = ParseConnection("http", httpOption)

@@ -46,7 +46,10 @@ public sealed class HttpPostService : OneBotServiceBase, IOneBotService
 
     public async Task SendJsonAsync<T>(T json, CancellationToken cancellationToken)
     {
-        string payload = JsonSerializer.Serialize(json, JsonSerializerOptionsFactory.UnsafeSnakeCase);
+        string payload = JsonSerializer.Serialize(
+            json,
+            JsonSerializerOptionsFactory.UnsafeSnakeCase
+        );
         try
         {
             await _httpClient.PostAsync(

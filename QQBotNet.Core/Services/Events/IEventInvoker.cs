@@ -4,6 +4,9 @@ using System;
 
 namespace QQBotNet.Core.Services.Events;
 
+/// <summary>
+/// 事件执行器接口
+/// </summary>
 public interface IEventInvoker
 {
     /// <summary>
