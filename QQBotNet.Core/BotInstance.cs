@@ -1,4 +1,5 @@
 ﻿using QQBotNet.Core.Models;
+using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Services;
 using QQBotNet.Core.Services.Apis;
 using QQBotNet.Core.Services.Events;
@@ -16,12 +17,12 @@ public sealed class BotInstance : IDisposable
     /// <summary>
     /// WebSocket服务
     /// </summary>
-    public WebSocketService WebSocketService;
+    public readonly WebSocketService WebSocketService;
 
     /// <summary>
     /// Http服务
     /// </summary>
-    public HttpService HttpService;
+    public readonly HttpService HttpService;
 
     /// <summary>
     /// 事件调用器
@@ -49,17 +50,37 @@ public sealed class BotInstance : IDisposable
     public string? WebSocketUrl => WebSocketService?.Url;
 
     /// <summary>
+    /// 事件订阅intents
+    /// </summary>
+    public readonly EventIntent EventIntents;
+
+    /// <summary>
     /// 机器人实例
     /// </summary>
     /// <param name="botAppId">开发者ID</param>
     /// <param name="botToken">机器人令牌</param>
-    /// <param name="isSandbox">是否为沙箱环境</param>
-    public BotInstance(uint botAppId, string botToken, bool isSandbox = false)
+    /// <param name="eventIntents">事件订阅intents</param>
+    /// /// <param name="isSandbox">是否为沙箱环境</param>
+    public BotInstance(
+        uint botAppId,
+        string botToken,
+        EventIntent eventIntents =
+            EventIntent.ForumEvent
+            | EventIntent.GuildMessages
+            | EventIntent.GuildMessageReactions
+            | EventIntent.GuildMembers,
+        bool isSandbox = false
+    )
     {
-        EnsureNotEmptyOrNull(botToken, nameof(botToken));
+        if (botToken is null)
+            throw new ArgumentNullException(nameof(botToken));
+
+        if (string.IsNullOrEmpty(botToken))
+            throw new ArgumentException($"{nameof(botToken)} can't be empty.", nameof(botToken));
 
         BotAppId = botAppId;
         BotToken = botToken;
+        EventIntents = eventIntents;
         IsSandbox = isSandbox;
         Invoker = new(this);
         HttpService = new(this, IsSandbox);
@@ -68,7 +89,7 @@ public sealed class BotInstance : IDisposable
         {
             WebSocketService = new(
                 this,
-                HttpService.GetWebSocketUrl().WaitResult()
+                HttpService.GetWebSocketUrlAsync().WaitResult().Data?.Url
                     ?? throw new NotSupportedException("机器人WebSocket地址为空")
             );
         }
@@ -79,12 +100,9 @@ public sealed class BotInstance : IDisposable
     }
 
     /// <summary>
-    /// 异步启动
+    /// 启动WebSocket服务
     /// </summary>
-    public void Start()
-    {
-        WebSocketService.Start();
-    }
+    public void StartWebSocket() => WebSocketService.Start();
 
     /// <summary>
     /// <inheritdoc/>
@@ -93,14 +111,5 @@ public sealed class BotInstance : IDisposable
     {
         HttpService?.Dispose();
         WebSocketService?.Dispose();
-    }
-
-    private static void EnsureNotEmptyOrNull(string? input, string paramName)
-    {
-        if (input is null)
-            throw new ArgumentNullException(paramName);
-
-        if (string.IsNullOrEmpty(input))
-            throw new ArgumentException($"{paramName} can't be empty.", paramName);
     }
 }

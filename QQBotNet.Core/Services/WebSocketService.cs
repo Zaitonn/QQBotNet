@@ -52,7 +52,11 @@ public sealed class WebSocketService
     /// </summary>
     public readonly string Url;
 
-    internal Timer? _timer;
+    private Timer? _reconnectTimer;
+
+    private Timer? _heartbeatTimer;
+
+    private bool _disposed;
 
     internal WebSocketService(BotInstance instance, string url)
     {
@@ -66,9 +70,8 @@ public sealed class WebSocketService
 
         _webSocketClient = new(url);
 
-        _webSocketClient.Opened += (_, e) => _instance.Invoker.OnWebSocketOpened();
-        _webSocketClient.Closed += (_, e) => TryReconnect();
-        _webSocketClient.Closed += (_, e) => _instance.Invoker.OnWebSocketClosed();
+        _webSocketClient.Opened += (_, _) => _instance.Invoker.OnWebSocketOpened();
+        _webSocketClient.Closed += (_, _) => _instance.Invoker.OnWebSocketClosed();
         _webSocketClient.Error += (_, e) => _instance.Invoker.OnWebSocketError(e);
         _webSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
         _webSocketClient.MessageReceived += (_, e) =>
@@ -95,8 +98,10 @@ public sealed class WebSocketService
     public void Dispose()
     {
         _webSocketClient.Dispose();
-        _timer?.Dispose();
+        _heartbeatTimer?.Dispose();
+        _reconnectTimer?.Dispose();
         Session = null;
+        _disposed = true;
     }
 
     /// <summary>
@@ -107,7 +112,12 @@ public sealed class WebSocketService
     /// <summary>
     /// 关闭WebSocket连接
     /// </summary>
-    public void Stop() => _webSocketClient.Close();
+    public void Stop()
+    {
+        _webSocketClient.Close();
+        _reconnectTimer?.Close();
+        Session = null;
+    }
 
     private async Task HandlePacket(MessageReceivedEventArgs e)
     {
@@ -133,6 +143,9 @@ public sealed class WebSocketService
     /// <param name="packet">数据包</param>
     public async Task SendPacket(Packet packet)
     {
+        if (_disposed)
+            return;
+
         packet.SerialNumber = SerialNumber;
         packet.Type = null;
         await Task.Run(
@@ -150,10 +163,15 @@ public sealed class WebSocketService
     /// </summary>
     internal void StartTimer()
     {
-        _timer?.Dispose();
-        _timer = new(HeartbeatInterval);
-        _timer.Elapsed += async (_, _) => await SendHeartbeat();
-        _timer.Start();
+        _heartbeatTimer?.Dispose();
+        _heartbeatTimer = new(HeartbeatInterval);
+        _heartbeatTimer.Elapsed += async (_, _) => await SendHeartbeat();
+        _heartbeatTimer.Start();
+
+        _reconnectTimer?.Dispose();
+        _reconnectTimer = new(10000);
+        _reconnectTimer.Elapsed += (_, _) => TryReconnect();
+        _reconnectTimer.Start();
     }
 
     private async Task SendHeartbeat()
@@ -166,12 +184,11 @@ public sealed class WebSocketService
 
     private void TryReconnect()
     {
-        if (Session == null && _webSocketClient.State != WebSocketState.Closed)
+        if (Session == null || _webSocketClient.State != WebSocketState.Closed)
         {
             return;
         }
 
-        Task.Delay(5000).Wait();
         _webSocketClient.Open();
         _instance.Invoker.OnWebSocketReconnect();
     }

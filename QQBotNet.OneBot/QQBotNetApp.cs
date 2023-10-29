@@ -25,15 +25,11 @@ public sealed class QQBotNetApp : IHost
         Logger.EnableDebugLog = appConfig.DebugLog;
         _hostApp = host;
         _config = appConfig;
-        try
-        {
-            _instance = new(_config.BotInfo.BotAppId, _config.BotInfo.BotToken, _config.Sandbox);
-        }
-        catch
-        {
-            Logger.Warn<QQBotNetApp>("\"botAppId\"或\"botToken\"不正确");
-            throw;
-        }
+        _instance = new(
+            _config.BotInfo.BotAppId,
+            _config.BotInfo.BotToken,
+            isSandbox: _config.Sandbox
+        );
     }
 
     public void Dispose()
@@ -47,7 +43,7 @@ public sealed class QQBotNetApp : IHost
 
         try
         {
-            _instance.Start();
+            _instance.StartWebSocket();
         }
         catch (Exception e)
         {

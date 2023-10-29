@@ -27,10 +27,7 @@ public class HelloOperation : IOperation
                         {
                             Token = $"{botInstance.BotAppId}.{botInstance.BotToken}",
                             Shard = new[] { 0, 1 },
-                            Intents =
-                                EventIntent.ForumEvent
-                                | EventIntent.GuildMessages
-                                | EventIntent.GuildMessageReactions,
+                            Intents = botInstance.EventIntents,
                         },
                         JsonSerializerOptionsFactory.UnsafeSnakeCase
                     )

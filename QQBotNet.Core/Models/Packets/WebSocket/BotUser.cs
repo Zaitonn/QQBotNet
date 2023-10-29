@@ -1,4 +1,4 @@
-namespace QQBotNet.Core.Models.Packets.OpenApi;
+namespace QQBotNet.Core.Models.Packets.WebSockets;
 
 /// <summary>
 /// <see cref="Session"/>中的机器人对象

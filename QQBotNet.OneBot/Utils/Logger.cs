@@ -11,7 +11,7 @@ public class Logger
 
     public static void Info<T>(string? line)
     {
-        AnsiConsole.MarkupLineInterpolated(
+        AnsiConsole.MarkupLine(
             $"{DateTime.Now:T} [cadetblue_1][[INFO]][/]  [[{typeof(T)}]] {line}"
         );
     }
@@ -25,9 +25,11 @@ public class Logger
 
     public static void Error<T>(string? message, Exception e)
     {
+#pragma warning disable IDE0071 // 安全问题
         AnsiConsole.MarkupLineInterpolated(
-            $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e}[/]"
+            $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e.ToString()}[/]"
         );
+#pragma warning restore IDE0071
     }
 
     public static void Error<T>(string? line)

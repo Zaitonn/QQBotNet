@@ -1,4 +1,4 @@
-namespace QQBotNet.Core.Models.Packets.OpenApi;
+namespace QQBotNet.Core.Models.Packets.OpenApi.Body;
 
 /// <summary>
 /// WebSocketUrl数据包

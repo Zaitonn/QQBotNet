@@ -1,5 +1,8 @@
-
 # QQBotNet
+
+[![C#](https://img.shields.io/badge/QQBotNet.Core-%20.NET_6-blue)](#qqbotnetcore)
+[![C#](https://img.shields.io/badge/QQBotNet.OneBot-%20.NET_6-blue)](#qqbotnetonebot)
+[![wakatime](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215.svg)](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215)
 
 > **WARNING**  
 >此仓库和腾讯公司没有从属关系，仅作个人学习开发和使用。
@@ -13,7 +16,6 @@
 
 [![Nuget](https://img.shields.io/nuget/v/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
-[![C#](https://img.shields.io/badge/Core-%20.NET_6-blue)](#qqbotnet)
 
 QQ机器人的**非官方**C# SDK
 
@@ -28,16 +30,20 @@ dotnet add package QQBotNet.Core
 ### 进度
 
 - HttpApi
-  - [x] 获取WebSocket接入点
-  - [x] 频道
-  - [x] 权限组
-  - [x] 子频道
-  - [x] 用户
+  - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/model.html)
+  - [x] [用户](https://bot.q.qq.com/wiki/develop/api/openapi/user/model.html)
+  - [x] [频道](https://bot.q.qq.com/wiki/develop/api/openapi/guild/model.html)
+  - [x] [子频道](https://bot.q.qq.com/wiki/develop/api/openapi/channel/model.html)
+  - [x] [频道身份组](https://bot.q.qq.com/wiki/develop/api/openapi/guild/role_model.html)
+  - [x] [子频道权限](https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/model.html)
+  - [x] [成员](https://bot.q.qq.com/wiki/develop/api/openapi/member/model.html)
 - WebSocket
   - [x] 鉴权连接
   - [x] 维持心跳
 
 ## QQBotNet.OneBot
+
+[![OneBot 12](https://img.shields.io/badge/OneBot-12-black?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABwCAMAAADxPgR5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////29vbr6+vAAAAk1hCcwAAAAR0Uk5T////AEAqqfQAAAKcSURBVHja7NrbctswDATQXfD//zlpO7FlmwAWIOnOtNaTM5JwDMa8E+PNFz7g3waJ24fviyDPgfhz8fHP39cBcBL9KoJbQUxjA2iYqHL3FAnvzhL4GtVNUcoSZe6eSHizBcK5LL7dBr2AUZlev1ARRHCljzRALIEog6H3U6bCIyqIZdAT0eBuJYaGiJaHSjmkYIZd+qSGWAQnIaz2OArVnX6vrItQvbhZJtVGB5qX9wKqCMkb9W7aexfCO/rwQRBzsDIsYx4AOz0nhAtWu7bqkEQBO0Pr+Ftjt5fFCUEbm0Sbgdu8WSgJ5NgH2iu46R/o1UcBXJsFusWF/QUaz3RwJMEgngfaGGdSxJkE/Yg4lOBryBiMwvAhZrVMUUvwqU7F05b5WLaUIN4M4hRocQQRnEedgsn7TZB3UCpRrIJwQfqvGwsg18EnI2uSVNC8t+0QmMXogvbPg/xk+Mnw/6kW/rraUlvqgmFreAA09xW5t0AFlHrQZ3CsgvZm0FbHNKyBmheBKIF2cCA8A600aHPmFtRB1XvMsJAiza7LpPog0UJwccKdzw8rdf8MyN2ePYF896LC5hTzdZqxb6VNXInaupARLDNBWgI8spq4T0Qb5H4vWfPmHo8OyB1ito+AysNNz0oglj1U955sjUN9d41LnrX2D/u7eRwxyOaOpfyevCWbTgDEoilsOnu7zsKhjRCsnD/QzhdkYLBLXjiK4f3UWmcx2M7PO21CKVTH84638NTplt6JIQH0ZwCNuiWAfvuLhdrcOYPVO9eW3A67l7hZtgaY9GZo9AFc6cryjoeFBIWeU+npnk/nLE0OxCHL1eQsc1IciehjpJv5mqCsjeopaH6r15/MrxNnVhu7tmcslay2gO2Z1QfcfX0JMACG41/u0RrI9QAAAABJRU5ErkJggg==)](https://12.onebot.dev/)
 
 QQ机器人基于Net6.0的OneBot实现（🚧暂未完工）
 

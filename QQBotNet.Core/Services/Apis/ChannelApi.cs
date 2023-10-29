@@ -1,10 +1,9 @@
 using QQBotNet.Core.Models.Business.Channels;
-using QQBotNet.Core.Utils;
+using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Models.Packets.OpenApi.Body;
 using QQBotNet.Core.Utils.Extensions;
 using System;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 
@@ -18,49 +17,49 @@ public static class ChannelApi
     /// <summary>
     /// 获取子频道列表
     /// <br/>
-    /// 用于获取 guildId 指定的频道下的子频道列表。
+    /// 获取指定的频道下的子频道列表
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/guild/get_guild.html</see>
     /// </summary>
     /// <param name="httpService">Http服务</param>
     /// <param name="guildId">频道ID</param>
     /// <returns>Channel对象数组</returns>
-    public static async Task<Channel[]?> GetChannelsAsync(
+    public static async Task<HttpPacket<Channel[]>> GetChannelsAsync(
         this HttpService httpService,
         string guildId
     )
     {
-        return await httpService.HttpClient.GetFromJsonAsync<Channel[]>(
-            $"/guilds/{guildId.Encode()}/channels",
-            JsonSerializerOptionsFactory.UnsafeSnakeCase
+        return await httpService.HttpClient.RequestJson<Channel[]>(
+            HttpMethod.Get,
+            $"/guilds/{guildId.Encode()}/channels"
         );
     }
 
     /// <summary>
     /// 获取子频道详情
     /// <br/>
-    /// 用于获取 channelId 指定的子频道的详情。
+    /// 获取指定的子频道的详情
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/get_channel.html</see>
     /// </summary>
     /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
     /// <returns>Channel对象</returns>
-    public static async Task<Channel?> GetChannelAsync(
+    public static async Task<HttpPacket<Channel>> GetChannelAsync(
         this HttpService httpService,
         string channelId
     )
     {
-        return await httpService.HttpClient.GetFromJsonAsync<Channel>(
-            $"/channels/{channelId.Encode()}",
-            JsonSerializerOptionsFactory.UnsafeSnakeCase
+        return await httpService.HttpClient.RequestJson<Channel>(
+            HttpMethod.Get,
+            $"/channels/{channelId.Encode()}"
         );
     }
 
     /// <summary>
     /// 创建子频道（仅私域机器人可用）
     /// <br/>
-    /// 用于在 guildId 指定的频道下创建一个子频道。
+    /// 在指定的频道下创建一个子频道
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/post_channels.html</see>
     /// </summary>
@@ -68,19 +67,17 @@ public static class ChannelApi
     /// <param name="guildId">频道ID</param>
     /// <param name="newChannel">子频道对象</param>
     /// <returns>Channel对象</returns>
-    public static async Task<Channel?> CreateChannelAsync(
+    public static async Task<HttpPacket<Channel>> CreateChannelAsync(
         this HttpService httpService,
         string guildId,
         NewChannel newChannel
     )
     {
-        return await (
-            await httpService.HttpClient.PostJsonAsync(
-                $"/guilds/{guildId.Encode()}/channels",
-                newChannel,
-                JsonSerializerOptionsFactory.UnsafeSnakeCase
-            )
-        ).Content.ReadFromJsonAsync<Channel>(JsonSerializerOptionsFactory.UnsafeSnakeCase);
+        return await httpService.HttpClient.RequestJson<Channel>(
+            HttpMethod.Post,
+            $"/guilds/{guildId.Encode()}/channels",
+            newChannel ?? throw new ArgumentNullException(nameof(newChannel))
+        );
     }
 
 #pragma warning disable CS1998
@@ -88,7 +85,7 @@ public static class ChannelApi
     /// <summary>
     /// 修改子频道（仅私域机器人可用）
     /// <br/>
-    /// 用于修改 channelId 指定的子频道的信息。
+    /// 修改指定的子频道的信息
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/patch_channel.html</see>
     /// </summary>
@@ -100,7 +97,7 @@ public static class ChannelApi
 #if NETFRAMEWORK
     [Obsolete("此版本的Net框架下不支持Patch方法", true)]
 #endif
-    public static async Task<Channel?> EditChannelAsync(
+    public static async Task<HttpPacket<Channel>> EditChannelAsync(
         this HttpService httpService,
         string channelId,
         EditedChannel editedChannel
@@ -109,19 +106,11 @@ public static class ChannelApi
 #if NETFRAMEWORK
         throw new NotSupportedException("此版本的Net框架下不支持Patch方法");
 #else
-        return await (
-            await httpService.HttpClient.SendAsync(
-                new(HttpMethod.Patch, $"/channels/{channelId.Encode()}")
-                {
-                    Content = new StringContent(
-                        JsonSerializer.Serialize(
-                            editedChannel,
-                            JsonSerializerOptionsFactory.UnsafeSnakeCase
-                        )
-                    ).WithJsonHeader()
-                }
-            )
-        ).Content.ReadFromJsonAsync<Channel>(JsonSerializerOptionsFactory.UnsafeSnakeCase);
+        return await httpService.HttpClient.RequestJson<Channel>(
+            HttpMethod.Patch,
+            $"/channels/{channelId.Encode()}",
+            editedChannel
+        );
 #endif
     }
 
@@ -130,51 +119,141 @@ public static class ChannelApi
     /// <summary>
     /// 删除子频道（仅私域机器人可用）
     /// <br/>
-    /// 用于删除 channelId 指定的子频道。
+    /// 删除指定的子频道
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/delete_channel.html</see>
     /// </summary>
     /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
-    public static async Task DeleteChannelAsync(this HttpService httpService, string channelId)
+    public static async Task<HttpPacket> DeleteChannelAsync(
+        this HttpService httpService,
+        string channelId
+    )
     {
-        await httpService.HttpClient.SendAsync(
-            new(HttpMethod.Delete, $"/channels/{channelId.Encode()}")
-            {
-                Content = new StringContent(string.Empty).WithJsonHeader()
-            }
+        return await httpService.HttpClient.RequestJsonWithNoResult(
+            HttpMethod.Delete,
+            $"/channels/{channelId.Encode()}"
         );
     }
 
     /// <summary>
     /// 获取在线成员数
     /// <br/>
-    /// 用于删除 channelId 指定的子频道。
+    /// 查询音视频/直播子频道的在线成员数
     /// <br/>
     /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel/get_online_nums.html</see>
     /// </summary>
     /// <param name="httpService">Http服务</param>
     /// <param name="channelId">子频道ID</param>
     /// <returns>在线成员数</returns>
-    public static async Task<int> GetChannelOnlineNumAsync(
+    public static async Task<HttpPacket<OnlineNum>> GetChannelOnlineNumAsync(
         this HttpService httpService,
         string channelId
     )
     {
-        var responce = await (
-            await httpService.HttpClient.SendAsync(
-                new(HttpMethod.Get, $"/channels/{channelId.Encode()}/online_nums")
-                {
-                    Content = new StringContent(string.Empty).WithJsonHeader()
-                }
-            )
-        ).Content.ReadAsStringAsync();
+        return await httpService.HttpClient.RequestJson<OnlineNum>(
+            HttpMethod.Get,
+            $"/channels/{channelId.Encode()}/online_nums"
+        );
+    }
 
-        var num = (int?)JsonSerializer.Deserialize<JsonNode>(responce)?["online_nums"];
+    /// <summary>
+    /// 获取子频道用户权限
+    /// <br/>
+    /// 获取子频道下用户的权限
+    /// <br/>
+    /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/get_channel_permissions.html</see>
+    /// </summary>
+    /// <param name="httpService">Http服务</param>
+    /// <param name="channelId">子频道ID</param>
+    /// <param name="userId">用户ID</param>
+    /// <returns>子频道用户权限</returns>
+    public static async Task<HttpPacket<ChannelPermissions>> GetChannelMemberPermissionAsync(
+        this HttpService httpService,
+        string channelId,
+        string userId
+    )
+    {
+        return await httpService.HttpClient.RequestJson<ChannelPermissions>(
+            HttpMethod.Get,
+            $"/channels/{channelId.Encode()}/members/{userId.Encode()}/permissions"
+        );
+    }
 
-        if (!num.HasValue)
-            throw new NotSupportedException($"返回获得的\"online_nums\"为空");
+    /// <summary>
+    /// 修改子频道权限
+    /// <br/>
+    /// 修改子频道下用户的权限
+    /// <br/>
+    /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/put_channel_permissions.html</see>
+    /// </summary>
+    /// <param name="httpService">Http服务</param>
+    /// <param name="channelId">子频道ID</param>
+    /// <param name="userId">用户ID</param>
+    /// <param name="add">赋予用户的权限</param>
+    /// <param name="remove">删除用户的权限</param>
+    public static async Task<HttpPacket> EditChannelMemberPermissionAsync(
+        this HttpService httpService,
+        string channelId,
+        string userId,
+        PermissionType add,
+        PermissionType remove
+    )
+    {
+        return await httpService.HttpClient.RequestJsonWithNoResult(
+            HttpMethod.Put,
+            $"/channels/{channelId.Encode()}/members/{userId.Encode()}/permissions",
+            new JsonObject { { "add", (int)add }, { "remove", (int)remove } }
+        );
+    }
 
-        return num.Value;
+    /// <summary>
+    /// 获取子频道身份组权限
+    /// <br/>
+    /// 获取子频道下身份组的权限
+    /// <br/>
+    /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/get_channel_roles_permissions.html</see>
+    /// </summary>
+    /// <param name="httpService">Http服务</param>
+    /// <param name="channelId">子频道ID</param>
+    /// <param name="roleId">身份组ID</param>
+    /// <returns>子频道身份组权限</returns>
+    public static async Task<HttpPacket<ChannelPermissions>> GetChannelRolePermissionAsync(
+        this HttpService httpService,
+        string channelId,
+        string roleId
+    )
+    {
+        return await httpService.HttpClient.RequestJson<ChannelPermissions>(
+            HttpMethod.Get,
+            $"/channels/{channelId.Encode()}/roles/{roleId.Encode()}/permissions"
+        );
+    }
+
+    /// <summary>
+    /// 修改子频道身份组权限
+    /// <br/>
+    /// 修改子频道下身份组的权限
+    /// <br/>
+    /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/put_channel_roles_permissions.html</see>
+    /// </summary>
+    /// <param name="httpService">Http服务</param>
+    /// <param name="channelId">子频道ID</param>
+    /// <param name="roleId">身份组ID</param>
+    /// <param name="add">赋予用户的权限</param>
+    /// <param name="remove">删除用户的权限</param>
+    public static async Task<HttpPacket> EditChannelRolePermissionAsync(
+        this HttpService httpService,
+        string channelId,
+        string roleId,
+        PermissionType add,
+        PermissionType remove
+    )
+    {
+        return await httpService.HttpClient.RequestJsonWithNoResult(
+            HttpMethod.Put,
+            $"/channels/{channelId.Encode()}/roles/{roleId.Encode()}/permissions",
+            new JsonObject { { "add", (int)add }, { "remove", (int)remove }, }
+        );
     }
 }

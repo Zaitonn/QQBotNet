@@ -9,23 +9,13 @@ namespace QQBotNet.Core.Services.Events;
 /// <summary>
 /// 机器人分发事件的事件参数
 /// </summary>
-public class BotDispatchEventReceivedEventArgs : EventArgs
+public class BotDispatchEventReceivedEventArgs : BotDispatchEventReceivedEventArgs<JsonNode>
 {
     internal BotDispatchEventReceivedEventArgs(DispatchEventType eventType, JsonNode? data)
     {
         Event = eventType;
         Data = data;
     }
-
-    /// <summary>
-    /// 数据主体
-    /// </summary>
-    public readonly JsonNode? Data;
-
-    /// <summary>
-    /// 分发的事件类型
-    /// </summary>
-    public readonly DispatchEventType Event;
 }
 
 /// <summary>
@@ -33,6 +23,8 @@ public class BotDispatchEventReceivedEventArgs : EventArgs
 /// </summary>
 public class BotDispatchEventReceivedEventArgs<T> : EventArgs
 {
+    internal BotDispatchEventReceivedEventArgs() { }
+
     internal BotDispatchEventReceivedEventArgs(DispatchEventType eventType, JsonNode? data)
     {
         Event = eventType;
@@ -42,10 +34,10 @@ public class BotDispatchEventReceivedEventArgs<T> : EventArgs
     /// <summary>
     /// 数据主体
     /// </summary>
-    public readonly T? Data;
+    public T? Data { get; init; }
 
     /// <summary>
     /// 分发的事件类型
     /// </summary>
-    public readonly DispatchEventType Event;
+    public DispatchEventType Event { get; init; }
 }

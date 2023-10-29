@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Packets.OpenApi;
+namespace QQBotNet.Core.Models.Packets.WebSockets;
 
 /// <summary>
 /// 连接凭证

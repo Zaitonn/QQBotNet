@@ -1,3 +1,4 @@
+
 namespace QQBotNet.Core.Models.Business.Channels;
 
 /// <summary>

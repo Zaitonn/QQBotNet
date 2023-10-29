@@ -1,7 +1,7 @@
 using QQBotNet.Core.Models.Packets.OpenApi;
-using QQBotNet.Core.Utils;
-using System;
-using System.Net.Http.Json;
+using QQBotNet.Core.Models.Packets.OpenApi.Body;
+using QQBotNet.Core.Utils.Extensions;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace QQBotNet.Core.Services.Apis;
@@ -18,13 +18,10 @@ public static class WssApi
     /// </summary>
     /// <param name="httpService">Http服务</param>
     /// <returns>WSS 接入地址</returns>
-    public static async Task<string?> GetWebSocketUrl(this HttpService httpService)
+    public static async Task<HttpPacket<WebSocketUrl>> GetWebSocketUrlAsync(
+        this HttpService httpService
+    )
     {
-        var url = await httpService.HttpClient.GetFromJsonAsync<WebSocketUrl>(
-            "/gateway",
-            JsonSerializerOptionsFactory.UnsafeSnakeCase
-        );
-
-        return url?.Url;
+        return await httpService.HttpClient.RequestJson<WebSocketUrl>(HttpMethod.Get, "/gateway");
     }
 }

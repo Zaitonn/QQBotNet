@@ -11,16 +11,6 @@ namespace QQBotNet.Core.Utils;
 public static class JsonSerializerOptionsFactory
 {
     /// <summary>
-    /// 小驼峰命名规则
-    /// </summary>
-    public static readonly JsonSerializerOptions CamelCase =
-        new()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-        };
-
-    /// <summary>
     /// 蛇形命名规则
     /// </summary>
     public static readonly JsonSerializerOptions UnsafeSnakeCase =

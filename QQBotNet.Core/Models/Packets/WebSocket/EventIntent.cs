@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Packets.OpenApi;
+namespace QQBotNet.Core.Models.Packets.WebSockets;
 
 /// <summary>
 /// <see>https://bot.q.qq.com/wiki/develop/api/gateway/intents.html</see>
@@ -47,6 +47,7 @@ public enum EventIntent
     /// <summary>
     /// 用户在群聊@机器人发送消息 或 用户在单聊发送消息给机器人
     /// </summary>
+    [Obsolete("可能不可用")]
     GroupAtMessageOrPrivateMessage = 1 << 25,
 
     /// <summary>

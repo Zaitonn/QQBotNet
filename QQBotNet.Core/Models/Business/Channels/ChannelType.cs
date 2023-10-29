@@ -15,7 +15,7 @@ public enum ChannelType
     /// <summary>
     /// 保留，不可用
     /// </summary>
-    [Obsolete("保留，不可用")]
+    [Obsolete("不可用")]
     Reserved1 = 1,
 
     /// <summary>
@@ -26,7 +26,7 @@ public enum ChannelType
     /// <summary>
     /// 保留，不可用
     /// </summary>
-    [Obsolete("保留，不可用")]
+    [Obsolete("不可用")]
     Reserved3 = 3,
 
     /// <summary>
