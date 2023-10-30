@@ -1,21 +1,18 @@
+using System.Text.Json.Nodes;
+
 namespace QQBotNet.Core.Models.Packets.OpenApi;
 
 /// <summary>
 /// HttpApi的数据包（泛型）
 /// </summary>
-public class HttpPacket<T> : HttpPacket
+public class HttpPacket<T>
+    where T : notnull
 {
     /// <summary>
     /// 数据主体
     /// </summary>
     public T? Data { get; internal init; }
-}
 
-/// <summary>
-/// HttpApi的数据包
-/// </summary>
-public class HttpPacket
-{
     /// <summary>
     /// 状态码
     /// </summary>
@@ -31,3 +28,8 @@ public class HttpPacket
     /// </summary>
     public bool Success => Code is null && string.IsNullOrEmpty(Message);
 }
+
+/// <summary>
+/// HttpApi的数据包
+/// </summary>
+public class HttpPacket : HttpPacket<JsonNode> { }

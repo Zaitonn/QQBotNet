@@ -1,3 +1,5 @@
+using System;
+
 namespace QQBotNet.Core.Models.Business.Messages;
 
 /// <summary>
@@ -14,6 +16,11 @@ public class MessageMarkdown
     /// markdown 自定义模板 id
     /// </summary>
     public string? CustomTemplateId { get; set; }
+
+    /// <summary>
+    /// markdown 模板模板参数
+    /// </summary>
+    public MessageMarkdownParams[] Params { get; set; } = Array.Empty<MessageMarkdownParams>();
 
     /// <summary>
     /// 原生 markdown 内容。与上面三个参数互斥

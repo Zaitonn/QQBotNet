@@ -1,4 +1,3 @@
-using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Services.Operations;
 using WebSocket4Net;

@@ -25,7 +25,7 @@ public class Logger
 
     public static void Error<T>(string? message, Exception e)
     {
-#pragma warning disable IDE0071 // 安全问题
+#pragma warning disable IDE0071 // https://github.com/spectreconsole/spectre.console/issues/1348
         AnsiConsole.MarkupLineInterpolated(
             $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e.ToString()}[/]"
         );

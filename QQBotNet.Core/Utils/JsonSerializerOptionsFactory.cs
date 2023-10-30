@@ -21,6 +21,12 @@ public static class JsonSerializerOptionsFactory
             NumberHandling = JsonNumberHandling.AllowReadingFromString
         };
 
+    /// <summary>
+    /// 蛇形命名规则（忽略null）
+    /// </summary>
+    public static readonly JsonSerializerOptions UnsafeSnakeCaseAndIgnoreNull =
+        new(UnsafeSnakeCase) { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+
     private class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
     {
         public override string ConvertName(string name) =>

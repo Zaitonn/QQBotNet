@@ -84,11 +84,7 @@ internal static class CommandHelper
     {
         var appConfig = new AppConfig()
         {
-            BotInfo =
-            {
-                BotAppId = botAppId,
-                BotToken = botToken,
-            },
+            BotInfo = { BotAppId = botAppId, BotToken = botToken, },
             Sandbox = sandBox,
             Connections = ParseConnection("http", httpOption)
                 .Concat(ParseConnection("http-post", httpPostOption))
@@ -120,8 +116,8 @@ internal static class CommandHelper
                 .GetExecutingAssembly()
                 .GetManifestResourceStream("QQBotNet.OneBot.Sources.DefaultConfig.jsonc")
             ?? throw new NullReferenceException(
-                "\"QQBotNet.OneBot.Sources.DefaultConfig.jsonc\" is null. "
-                    + "Please check the building environment."
+                "程序集嵌入文件 \"QQBotNet.OneBot.Sources.DefaultConfig.jsonc\" 为空。 "
+                    + "请检查编译环境"
             );
 
         using var fileStream = new FileStream("config.json", FileMode.OpenOrCreate);

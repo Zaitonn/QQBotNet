@@ -10,7 +10,7 @@ namespace QQBotNet.Core.Utils.Extensions;
 
 internal static class ApiExtension
 {
-    public static HttpPacket<T> Wrap<T>(
+    private static HttpPacket<T> Wrap<T>(
         this JsonNode? jsonNode,
         JsonSerializerOptions? options = null
     )
@@ -42,11 +42,28 @@ internal static class ApiExtension
         throw new InvalidOperationException();
     }
 
+    public static async Task<HttpPacket<T>> Request<T>(
+        this HttpClient httpClient,
+        HttpMethod httpMethod,
+        string endpoint,
+        HttpContent? body
+    )
+        where T : notnull
+    {
+        var response = await httpClient.SendAsync(new(httpMethod, endpoint) { Content = body });
+        var jsonNode =
+            (await response.Content.ReadFromJsonAsync<JsonNode>())
+            ?? throw new InvalidOperationException("返回数据为空");
+
+        return jsonNode.Wrap<T>();
+    }
+
     public static async Task<HttpPacket<T>> RequestJson<T>(
         this HttpClient httpClient,
         HttpMethod httpMethod,
         string endpoint,
-        object? body = null
+        object? body = null,
+        bool ignoreNull = false
     )
         where T : notnull
     {
@@ -56,7 +73,12 @@ internal static class ApiExtension
                 Content = body is null
                     ? null
                     : JsonContent
-                        .Create(body, options: JsonSerializerOptionsFactory.UnsafeSnakeCase)
+                        .Create(
+                            body,
+                            options: ignoreNull
+                                ? JsonSerializerOptionsFactory.UnsafeSnakeCaseAndIgnoreNull
+                                : JsonSerializerOptionsFactory.UnsafeSnakeCase
+                        )
                         .WithJsonHeader()
             }
         );
@@ -71,7 +93,8 @@ internal static class ApiExtension
         this HttpClient httpClient,
         HttpMethod httpMethod,
         string endpoint,
-        T? body
+        T? body,
+        bool ignoreNull = false
     )
     {
         var response = await httpClient.SendAsync(
@@ -80,7 +103,12 @@ internal static class ApiExtension
                 Content = body is null
                     ? null
                     : JsonContent
-                        .Create(body, options: JsonSerializerOptionsFactory.UnsafeSnakeCase)
+                        .Create(
+                            body,
+                            options: ignoreNull
+                                ? JsonSerializerOptionsFactory.UnsafeSnakeCaseAndIgnoreNull
+                                : JsonSerializerOptionsFactory.UnsafeSnakeCase
+                        )
                         .WithJsonHeader()
             }
         );
@@ -95,6 +123,7 @@ internal static class ApiExtension
     public static async Task<HttpPacket> RequestJsonWithNoResult(
         this HttpClient httpClient,
         HttpMethod httpMethod,
-        string endpoint
-    ) => await RequestJsonWithNoResult<object>(httpClient, httpMethod, endpoint, null);
+        string endpoint,
+        bool ignoreNull = false
+    ) => await RequestJsonWithNoResult<object>(httpClient, httpMethod, endpoint, null, ignoreNull);
 }

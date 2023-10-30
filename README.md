@@ -30,13 +30,15 @@ dotnet add package QQBotNet.Core
 ### 进度
 
 - HttpApi
-  - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/model.html)
+  - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/url_get.html)
   - [x] [用户](https://bot.q.qq.com/wiki/develop/api/openapi/user/model.html)
   - [x] [频道](https://bot.q.qq.com/wiki/develop/api/openapi/guild/model.html)
   - [x] [子频道](https://bot.q.qq.com/wiki/develop/api/openapi/channel/model.html)
   - [x] [频道身份组](https://bot.q.qq.com/wiki/develop/api/openapi/guild/role_model.html)
   - [x] [子频道权限](https://bot.q.qq.com/wiki/develop/api/openapi/channel_permissions/model.html)
   - [x] [成员](https://bot.q.qq.com/wiki/develop/api/openapi/member/model.html)
+  - [x] [消息](https://bot.q.qq.com/wiki/develop/api/openapi/message/model.html)
+  - [x] [消息频率](https://bot.q.qq.com/wiki/develop/api/openapi/setting/model.html)
 - WebSocket
   - [x] 鉴权连接
   - [x] 维持心跳
