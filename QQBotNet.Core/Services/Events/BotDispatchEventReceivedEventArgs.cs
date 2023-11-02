@@ -1,5 +1,5 @@
 using QQBotNet.Core.Services.Operations.DispatchEvent;
-using QQBotNet.Core.Utils;
+using QQBotNet.Core.Utils.Json;
 using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;

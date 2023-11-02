@@ -1,4 +1,4 @@
-using QQBotNet.Core.Utils;
+using QQBotNet.Core.Utils.Json;
 using QQBotNet.OneBot.Models.Config;
 using QQBotNet.OneBot.Models.Meta;
 using QQBotNet.OneBot.Utils;

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace QQBotNet.Core.Utils;
+namespace QQBotNet.Core.Utils.Json;
 
 /// <summary>
 /// Json序列化选项工厂
@@ -25,7 +25,7 @@ public static class JsonSerializerOptionsFactory
     /// 蛇形命名规则（忽略null）
     /// </summary>
     public static readonly JsonSerializerOptions UnsafeSnakeCaseAndIgnoreNull =
-        new(UnsafeSnakeCase) { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
+        new(UnsafeSnakeCase) { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
 
     private class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
     {

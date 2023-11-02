@@ -28,7 +28,7 @@ public static class GuildApi
     {
         return await httpService.HttpClient.RequestJson<Guild>(
             HttpMethod.Get,
-            $"/guilds/{guildId}"
+            $"/guilds/{guildId.Encode()}"
         );
     }
 }

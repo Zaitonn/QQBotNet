@@ -1,4 +1,5 @@
 using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Utils.Json;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -39,6 +40,15 @@ internal static class ApiExtension
                 )
             };
 
+        if (jsonNode is null)
+        {
+            if (typeof(T).BaseType != typeof(Array))
+                return new();
+
+            return new() { Data = (T?)Activator.CreateInstance(typeof(T), 0) };
+            // 啥比Api一天到晚返回空响应😅😅😅你没事吧
+        }
+
         throw new InvalidOperationException();
     }
 
@@ -51,9 +61,7 @@ internal static class ApiExtension
         where T : notnull
     {
         var response = await httpClient.SendAsync(new(httpMethod, endpoint) { Content = body });
-        var jsonNode =
-            (await response.Content.ReadFromJsonAsync<JsonNode>())
-            ?? throw new InvalidOperationException("返回数据为空");
+        var jsonNode = await response.Content.ReadFromJsonAsync<JsonNode>();
 
         return jsonNode.Wrap<T>();
     }
@@ -82,9 +90,7 @@ internal static class ApiExtension
                         .WithJsonHeader()
             }
         );
-        var jsonNode =
-            (await response.Content.ReadFromJsonAsync<JsonNode>())
-            ?? throw new InvalidOperationException("返回数据为空");
+        var jsonNode = await response.Content.ReadFromJsonAsync<JsonNode>();
 
         return jsonNode.Wrap<T>();
     }
@@ -112,12 +118,11 @@ internal static class ApiExtension
                         .WithJsonHeader()
             }
         );
-        var packet =
-            await response.Content.ReadFromJsonAsync<HttpPacket>(
-                JsonSerializerOptionsFactory.UnsafeSnakeCase
-            ) ?? throw new InvalidOperationException("返回数据为空");
+        var packet = await response.Content.ReadFromJsonAsync<HttpPacket>(
+            JsonSerializerOptionsFactory.UnsafeSnakeCase
+        );
 
-        return packet;
+        return packet ?? new();
     }
 
     public static async Task<HttpPacket> RequestJsonWithNoResult(

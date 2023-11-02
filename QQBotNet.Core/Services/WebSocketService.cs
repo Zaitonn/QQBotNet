@@ -42,7 +42,7 @@ public sealed class WebSocketService
     private static readonly JsonSerializerOptions _packetJsonSerializerOptions =
         new()
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
@@ -145,16 +145,22 @@ public sealed class WebSocketService
         if (_disposed)
             return;
 
-        packet.SerialNumber = SerialNumber;
-        packet.Type = null;
+        var _packet = new Packet
+        {
+            SerialNumber = SerialNumber,
+            Type = null,
+            Data = packet.Data,
+            Id = packet.Id,
+            OperationCode =packet.OperationCode,
+        };
         await Task.Run(
             () =>
                 _webSocketClient.Send(
-                    JsonSerializer.Serialize(packet, _packetJsonSerializerOptions)
+                    JsonSerializer.Serialize(_packet, _packetJsonSerializerOptions)
                 )
         );
 
-        _instance.Invoker.OnPacketSent(new(packet));
+        _instance.Invoker.OnPacketSent(new(_packet));
     }
 
     /// <summary>

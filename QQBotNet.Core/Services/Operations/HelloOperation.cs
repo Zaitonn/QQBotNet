@@ -1,6 +1,5 @@
-using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.WebSockets;
-using QQBotNet.Core.Utils;
+using QQBotNet.Core.Utils.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 

@@ -8,13 +8,13 @@ namespace QQBotNet.Core.Services;
 /// </summary>
 public sealed class HttpService : IDisposable
 {
-    internal readonly HttpClient HttpClient;
-
-    private readonly BotInstance _instance;
+    /// <summary>
+    /// Http客户端（已设置BaseAddress）
+    /// </summary>
+    public readonly HttpClient HttpClient;
 
     internal HttpService(BotInstance instance, bool isSandbox)
     {
-        _instance = instance;
         HttpClient = new()
         {
             BaseAddress = new($"https://{(isSandbox ? Constants.SandboxSite : Constants.Site)}")
@@ -22,9 +22,9 @@ public sealed class HttpService : IDisposable
         HttpClient.DefaultRequestHeaders.Clear();
         HttpClient.DefaultRequestHeaders.Authorization = new(
             "Bot",
-            $"{_instance.BotAppId}.{_instance.BotToken}"
+            $"{instance.BotAppId}.{instance.BotToken}"
         );
-        HttpClient.DefaultRequestHeaders.Add("X-Union-Appid", _instance.BotAppId.ToString());
+        HttpClient.DefaultRequestHeaders.Add("X-Union-Appid", instance.BotAppId.ToString());
     }
 
     /// <summary>

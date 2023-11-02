@@ -5,7 +5,7 @@
 [![wakatime](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215.svg)](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215)
 
 > **WARNING**  
->此仓库和腾讯公司没有从属关系，仅作个人学习开发和使用。
+>此仓库与腾讯公司**没有从属关系**，仅作个人学习开发和使用。
 
 ## 目录
 
@@ -30,7 +30,6 @@ dotnet add package QQBotNet.Core
 ### 进度
 
 - HttpApi
-  - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/url_get.html)
   - [x] [用户](https://bot.q.qq.com/wiki/develop/api/openapi/user/model.html)
   - [x] [频道](https://bot.q.qq.com/wiki/develop/api/openapi/guild/model.html)
   - [x] [子频道](https://bot.q.qq.com/wiki/develop/api/openapi/channel/model.html)
@@ -39,9 +38,21 @@ dotnet add package QQBotNet.Core
   - [x] [成员](https://bot.q.qq.com/wiki/develop/api/openapi/member/model.html)
   - [x] [消息](https://bot.q.qq.com/wiki/develop/api/openapi/message/model.html)
   - [x] [消息频率](https://bot.q.qq.com/wiki/develop/api/openapi/setting/model.html)
+  - [x] [私信](https://bot.q.qq.com/wiki/develop/api/openapi/dms/model.html)
+  - [x] [禁言](https://bot.q.qq.com/wiki/develop/api/openapi/guild/patch_guild_mute.html)
+  - [x] [公告](https://bot.q.qq.com/wiki/develop/api/openapi/announces/model.html)
+  - [x] [精华消息](https://bot.q.qq.com/wiki/develop/api/openapi/pins/model.html)
+  - [x] [日程](https://bot.q.qq.com/wiki/develop/api/openapi/schedule/model.html)
+  - [ ] [表情](https://bot.q.qq.com/wiki/develop/api/openapi/reaction/model.html)
+  - [ ] [音频](https://bot.q.qq.com/wiki/develop/api/openapi/audio/model.html)
+  - [ ] [帖子](https://bot.q.qq.com/wiki/develop/api/openapi/forum/model.html)
+  - [ ] [API权限查询](https://bot.q.qq.com/wiki/develop/api/openapi/api_permissions/model.html)
+  - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/url_get.html)
+  - [ ] [获取带分片 WSS 接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/shard_url_get.html)
 - WebSocket
   - [x] 鉴权连接
   - [x] 维持心跳
+  - [ ] 二级事件分发
 
 ## QQBotNet.OneBot
 

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using QQBotNet.Core;
+using QQBotNet.Core.Services.Apis;
 using QQBotNet.Core.Services.Events;
 using QQBotNet.OneBot.Models.Config;
 using QQBotNet.OneBot.Utils;

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace QQBotNet.Core.Models.Packets.WebSockets;
 
 /// <summary>
-/// <inheritdoc/>
+/// WebSocket数据包
 /// </summary>
 public class Packet<T> : IPacket<T>
 {
@@ -13,68 +13,38 @@ public class Packet<T> : IPacket<T>
     /// <inheritdoc/>
     /// </summary>
     [JsonPropertyName("op")]
-    public OperationCode OperationCode { get; set; }
+    public OperationCode OperationCode { get; init; }
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
     [JsonPropertyName("d")]
-    public T? Data { get; set; }
+    public T? Data { get; init; }
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
     [JsonPropertyName("t")]
-    public string? Type { get; set; }
+    public string? Type { get; init; }
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
     [JsonPropertyName("s")]
-    public long? SerialNumber { get; set; }
+    public long? SerialNumber { get; init; }
 
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public string? Id { get; init; }
 }
 
 /// <summary>
 /// <inheritdoc/>
 /// </summary>
-public class Packet : IPacket
+public class Packet : Packet<JsonNode>, IPacket
 {
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    [JsonPropertyName("op")]
-    public OperationCode OperationCode { get; set; }
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    [JsonPropertyName("d")]
-    public JsonNode? Data { get; set; }
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    [JsonPropertyName("t")]
-    public string? Type { get; set; }
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    [JsonPropertyName("s")]
-    public long? SerialNumber { get; set; }
-
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
-
     /// <summary>
     /// 转换为指定数据类型的数据包
     /// </summary>

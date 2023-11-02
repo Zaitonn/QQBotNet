@@ -2,14 +2,14 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;netstandard2.1;net462</TargetFrameworks>
-	    <LangVersion>11</LangVersion>
+	    <LangVersion>10</LangVersion>
         <Nullable>enable</Nullable>
 
         <!-- MetaData -->
         <Title>QQBotNet.Core</Title>
         <Authors>Zaitonn</Authors>
         <Description>QQ机器人的非官方C# SDK</Description>
-        <Version>0.0.4-alpha</Version>
+        <Version>0.0.5-alpha</Version>
         <Copyright>Zaitonn 2023</Copyright>
         <RepositoryUrl>https://github.com/Zaitonn/QQBotNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

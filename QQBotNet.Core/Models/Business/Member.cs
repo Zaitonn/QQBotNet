@@ -27,7 +27,7 @@ public class Member
     /// <summary>
     /// 用户加入频道的时间
     /// </summary>
-    public DateTime JoinedAt;
+    public DateTime JoinedAt { get; set; }
 
     /// <summary>
     /// 频道 id
