@@ -1,5 +1,6 @@
 using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.OpenApi.Body;
+using QQBotNet.Core.Utils;
 using QQBotNet.Core.Utils.Extensions;
 using System;
 using System.Drawing;
@@ -102,10 +103,7 @@ public static class RolesApi
             }
         );
     }
-
 #endif
-
-#pragma warning disable CS1998
 
     /// <summary>
     /// 修改频道身份组
@@ -121,9 +119,6 @@ public static class RolesApi
     /// <param name="color">ARGB 的 HEX 十六进制颜色值转换后的十进制数值</param>
     /// <param name="hoist">在成员列表中单独展示</param>
     /// <returns>Role对象</returns>
-#if NETFRAMEWORK
-    [Obsolete("此版本的Net框架下不支持Patch方法", true)]
-#endif
     public static async Task<HttpPacket<RoleInfo>> EditGuildRoleAsync(
         this HttpService httpService,
         string guildId,
@@ -133,11 +128,8 @@ public static class RolesApi
         bool hoist = false
     )
     {
-#if NETFRAMEWORK
-        throw new NotSupportedException("此版本的Net框架下不支持Patch方法");
-#else
         return await httpService.HttpClient.RequestJson<RoleInfo>(
-            HttpMethod.Patch,
+            HttpMethodEx.Patch,
             $"/guilds/{guildId.Encode()}/roles/{roleId.Encode()}",
             name is null
                 ? new JsonObject { { "color", color }, { "hoist", hoist ? 1 : 0 } }
@@ -148,10 +140,7 @@ public static class RolesApi
                     { "hoist", hoist ? 1 : 0 }
                 }
         );
-#endif
     }
-
-#pragma warning restore CS1998
 
     /// <summary>
     /// 删除频道身份组

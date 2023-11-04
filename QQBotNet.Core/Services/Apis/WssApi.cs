@@ -24,4 +24,21 @@ public static class WssApi
     {
         return await httpService.HttpClient.RequestJson<WebSocketUrl>(HttpMethod.Get, "/gateway");
     }
+
+    /// <summary>
+    /// 获取带分片 WSS 接入点
+    /// <br/>
+    /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/wss/shard_url_get.html</see>
+    /// </summary>
+    /// <param name="httpService">Http服务</param>
+    /// <returns>WSS 接入地址</returns>
+    public static async Task<HttpPacket<WebSocketUrl>> GetWebSocketShardUrlAsync(
+        this HttpService httpService
+    )
+    {
+        return await httpService.HttpClient.RequestJson<WebSocketUrl>(
+            HttpMethod.Get,
+            "/gateway/bot"
+        );
+    }
 }

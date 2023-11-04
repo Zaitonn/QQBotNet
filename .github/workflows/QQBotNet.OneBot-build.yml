@@ -21,8 +21,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
 
       - name: Install .NET
         uses: actions/setup-dotnet@v3
@@ -38,4 +36,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: QQBotNet.OneBot_${{ matrix.runtimeIdentifier }}
-          path: QQBotNet.OneBot/bin/Debug/net7.0/${{ matrix.runtimeIdentifier }}/publish
+          path: QQBotNet.OneBot/bin/Debug/net6.0/${{ matrix.runtimeIdentifier }}/publish

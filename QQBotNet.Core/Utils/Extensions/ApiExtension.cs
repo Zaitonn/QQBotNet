@@ -13,7 +13,7 @@ internal static class ApiExtension
 {
     private static HttpPacket<T> Wrap<T>(
         this JsonNode? jsonNode,
-        JsonSerializerOptions? options = null
+        HttpResponseMessage httpResponseMessage
     )
         where T : notnull
     {
@@ -21,31 +21,33 @@ internal static class ApiExtension
         {
             if (jsonObject.ContainsKey("code"))
                 return jsonObject.Deserialize<HttpPacket<T>>(
-                        options ?? JsonSerializerOptionsFactory.UnsafeSnakeCase
+                        JsonSerializerOptionsFactory.UnsafeSnakeCase
                     ) ?? new();
 
             return new()
             {
-                Data = jsonObject.Deserialize<T>(
-                    options ?? JsonSerializerOptionsFactory.UnsafeSnakeCase
-                )
+                Data = jsonObject.Deserialize<T>(JsonSerializerOptionsFactory.UnsafeSnakeCase),
+                Response = httpResponseMessage
             };
         }
 
         if (jsonNode is JsonArray jsonArray)
             return new()
             {
-                Data = jsonArray.Deserialize<T>(
-                    options ?? JsonSerializerOptionsFactory.UnsafeSnakeCase
-                )
+                Data = jsonArray.Deserialize<T>(JsonSerializerOptionsFactory.UnsafeSnakeCase),
+                Response = httpResponseMessage
             };
 
         if (jsonNode is null)
         {
             if (typeof(T).BaseType != typeof(Array))
-                return new();
+                return new() { Response = httpResponseMessage };
 
-            return new() { Data = (T?)Activator.CreateInstance(typeof(T), 0) };
+            return new()
+            {
+                Data = (T?)Activator.CreateInstance(typeof(T), 0),
+                Response = httpResponseMessage
+            };
             // 啥比Api一天到晚返回空响应😅😅😅你没事吧
         }
 
@@ -63,7 +65,7 @@ internal static class ApiExtension
         var response = await httpClient.SendAsync(new(httpMethod, endpoint) { Content = body });
         var jsonNode = await response.Content.ReadFromJsonAsync<JsonNode>();
 
-        return jsonNode.Wrap<T>();
+        return jsonNode.Wrap<T>(response);
     }
 
     public static async Task<HttpPacket<T>> RequestJson<T>(
@@ -91,8 +93,7 @@ internal static class ApiExtension
             }
         );
         var jsonNode = await response.Content.ReadFromJsonAsync<JsonNode>();
-
-        return jsonNode.Wrap<T>();
+        return jsonNode.Wrap<T>(response);
     }
 
     public static async Task<HttpPacket> RequestJsonWithNoResult<T>(
@@ -118,11 +119,13 @@ internal static class ApiExtension
                         .WithJsonHeader()
             }
         );
-        var packet = await response.Content.ReadFromJsonAsync<HttpPacket>(
-            JsonSerializerOptionsFactory.UnsafeSnakeCase
-        );
+        var packet =
+            await response.Content.ReadFromJsonAsync<HttpPacket>(
+                JsonSerializerOptionsFactory.UnsafeSnakeCase
+            ) ?? new();
 
-        return packet ?? new();
+        packet.Response = response;
+        return packet;
     }
 
     public static async Task<HttpPacket> RequestJsonWithNoResult(

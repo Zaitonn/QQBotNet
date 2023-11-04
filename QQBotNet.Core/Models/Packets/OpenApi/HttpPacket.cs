@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Http;
 using System.Text.Json.Nodes;
 
 namespace QQBotNet.Core.Models.Packets.OpenApi;
@@ -34,6 +36,11 @@ public class HttpPacket<T>
     /// 此次请求是否成功
     /// </summary>
     public bool Success => Code is null && string.IsNullOrEmpty(Message);
+
+    /// <summary>
+    /// 响应
+    /// </summary>
+    public HttpResponseMessage? Response { get; internal set; }
 }
 
 /// <summary>

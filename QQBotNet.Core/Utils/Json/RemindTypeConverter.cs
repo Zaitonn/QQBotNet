@@ -21,6 +21,7 @@ public class RemindTypeConverter : JsonConverter<RemindType>
     {
         return reader.TokenType switch
         {
+            JsonTokenType.Number => (RemindType)reader.GetUInt64(),
             JsonTokenType.String => (RemindType)int.Parse(reader.GetString()!),
             _ => throw new InvalidOperationException()
         };

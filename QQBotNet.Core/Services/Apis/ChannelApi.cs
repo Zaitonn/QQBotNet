@@ -1,6 +1,7 @@
 using QQBotNet.Core.Models.Business.Channels;
 using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.OpenApi.Body;
+using QQBotNet.Core.Utils;
 using QQBotNet.Core.Utils.Extensions;
 using System;
 using System.Net.Http;
@@ -80,8 +81,6 @@ public static class ChannelApi
         );
     }
 
-#pragma warning disable CS1998
-
     /// <summary>
     /// 修改子频道（仅私域机器人可用）
     /// <br/>
@@ -94,27 +93,18 @@ public static class ChannelApi
     /// <param name="editedChannel">子频道对象</param>
     /// <returns>Channel对象</returns>
 
-#if NETFRAMEWORK
-    [Obsolete("此版本的Net框架下不支持Patch方法", true)]
-#endif
     public static async Task<HttpPacket<Channel>> EditChannelAsync(
         this HttpService httpService,
         string channelId,
         EditedChannel editedChannel
     )
     {
-#if NETFRAMEWORK
-        throw new NotSupportedException("此版本的Net框架下不支持Patch方法");
-#else
         return await httpService.HttpClient.RequestJson<Channel>(
-            HttpMethod.Patch,
+            HttpMethodEx.Patch,
             $"/channels/{channelId.Encode()}",
             editedChannel
         );
-#endif
     }
-
-#pragma warning restore CS1998
 
     /// <summary>
     /// 删除子频道（仅私域机器人可用）

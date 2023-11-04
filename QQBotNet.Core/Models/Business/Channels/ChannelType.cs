@@ -37,7 +37,12 @@ public enum ChannelType
     /// <summary>
     /// 直播子频道
     /// </summary>
-    Live = 10005,
+    Live5 = 5,
+
+    /// <summary>
+    /// 直播子频道
+    /// </summary>
+    Live10005 = 10005,
 
     /// <summary>
     /// 应用子频道

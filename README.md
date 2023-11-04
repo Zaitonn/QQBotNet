@@ -45,10 +45,10 @@ dotnet add package QQBotNet.Core
   - [x] [日程](https://bot.q.qq.com/wiki/develop/api/openapi/schedule/model.html)
   - [ ] [表情](https://bot.q.qq.com/wiki/develop/api/openapi/reaction/model.html)
   - [ ] [音频](https://bot.q.qq.com/wiki/develop/api/openapi/audio/model.html)
-  - [ ] [帖子](https://bot.q.qq.com/wiki/develop/api/openapi/forum/model.html)
-  - [ ] [API权限查询](https://bot.q.qq.com/wiki/develop/api/openapi/api_permissions/model.html)
+  - [x] [帖子](https://bot.q.qq.com/wiki/develop/api/openapi/forum/model.html)
+  - [x] [API权限查询](https://bot.q.qq.com/wiki/develop/api/openapi/api_permissions/model.html)
   - [x] [获取WebSocket接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/url_get.html)
-  - [ ] [获取带分片 WSS 接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/shard_url_get.html)
+  - [x] [获取带分片 WSS 接入点](https://bot.q.qq.com/wiki/develop/api/openapi/wss/shard_url_get.html)
 - WebSocket
   - [x] 鉴权连接
   - [x] 维持心跳

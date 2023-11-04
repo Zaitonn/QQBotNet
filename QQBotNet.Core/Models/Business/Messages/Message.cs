@@ -13,7 +13,7 @@ public class Message
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
-    ///  子频道 id
+    /// 子频道 id
     /// </summary>
     public string ChannelId { get; set; } = string.Empty;
 

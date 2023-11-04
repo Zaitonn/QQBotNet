@@ -72,11 +72,14 @@ public sealed class BotInstance : IDisposable
         bool isSandbox = false
     )
     {
+        if (botAppId == 0)
+            throw new ArgumentOutOfRangeException(nameof(botAppId));
+
         if (botToken is null)
             throw new ArgumentNullException(nameof(botToken));
 
         if (string.IsNullOrEmpty(botToken))
-            throw new ArgumentException($"{nameof(botToken)} can't be empty.", nameof(botToken));
+            throw new ArgumentException($"{nameof(botToken)} 不能为空", nameof(botToken));
 
         BotAppId = botAppId;
         BotToken = botToken;

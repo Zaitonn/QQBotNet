@@ -1,12 +1,9 @@
 using QQBotNet.Core.Models.Business.Schedules;
 using QQBotNet.Core.Models.Packets.OpenApi;
+using QQBotNet.Core.Utils;
 using QQBotNet.Core.Utils.Extensions;
 using System.Net.Http;
 using System.Threading.Tasks;
-
-#if NETFRAMEWORK
-using System;
-#endif
 
 namespace QQBotNet.Core.Services.Apis;
 
@@ -88,8 +85,6 @@ public static class ScheduleApi
         );
     }
 
-#pragma warning disable CS1998
-
     /// <summary>
     /// 修改日程
     /// <br/>
@@ -102,9 +97,6 @@ public static class ScheduleApi
     /// <param name="schedule">日程，不需要带<see cref="Schedule.Id"/></param>
     /// <param name="scheduleId">日程ID</param>
     /// <returns><see cref="Schedule"/></returns>
-#if NETFRAMEWORK
-    [Obsolete("此版本的Net框架下不支持Patch方法", true)]
-#endif
     public static async Task<HttpPacket<Schedule>> EditScheduleAsync(
         this HttpService httpService,
         string channelId,
@@ -112,19 +104,13 @@ public static class ScheduleApi
         Schedule schedule
     )
     {
-#if NETFRAMEWORK
-        throw new NotSupportedException("此版本的Net框架下不支持Patch方法");
-#else
         return await httpService.HttpClient.RequestJson<Schedule>(
-            HttpMethod.Patch,
+            HttpMethodEx.Patch,
             $"/channels/{channelId.Encode()}/schedules/{scheduleId.Encode()}",
             schedule,
             true
         );
-#endif
     }
-
-#pragma warning restore CS1998
 
     /// <summary>
     /// 删除日程

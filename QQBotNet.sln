@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQBotNet.Core", "QQBotNet.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQBotNet.OneBot", "QQBotNet.OneBot\QQBotNet.OneBot.csproj", "{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QQBotNet.Core.Tests", "QQBotNet.Core.Tests\QQBotNet.Core.Tests.csproj", "{C12AB9C7-E2C4-4C9A-9535-195B5B03286C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BA8D273-B98A-4443-A8EB-AC47F6701AD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C12AB9C7-E2C4-4C9A-9535-195B5B03286C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C12AB9C7-E2C4-4C9A-9535-195B5B03286C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C12AB9C7-E2C4-4C9A-9535-195B5B03286C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C12AB9C7-E2C4-4C9A-9535-195B5B03286C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
