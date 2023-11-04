@@ -5,7 +5,6 @@ using QQBotNet.Core.Services.Apis;
 using QQBotNet.Core.Services.Events;
 using QQBotNet.Core.Utils.Extensions;
 using System;
-using System.Net.Http;
 
 namespace QQBotNet.Core;
 
@@ -101,11 +100,6 @@ public sealed class BotInstance : IDisposable
             throw new BotInstanceException("初始化失败", e);
         }
     }
-
-    /// <summary>
-    /// 启动WebSocket服务
-    /// </summary>
-    public void StartWebSocket() => WebSocketService.Start();
 
     /// <summary>
     /// <inheritdoc/>

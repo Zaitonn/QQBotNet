@@ -44,7 +44,7 @@ public sealed class QQBotNetApp : IHost
 
         try
         {
-            _instance.StartWebSocket();
+            _instance.WebSocketService.Start();
         }
         catch (Exception e)
         {

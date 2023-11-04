@@ -9,7 +9,7 @@
         <Title>QQBotNet.Core</Title>
         <Authors>Zaitonn</Authors>
         <Description>QQ机器人的非官方C# SDK</Description>
-        <Version>0.0.5-alpha</Version>
+        <Version>0.0.6-alpha</Version>
         <Copyright>Zaitonn 2023</Copyright>
         <RepositoryUrl>https://github.com/Zaitonn/QQBotNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
