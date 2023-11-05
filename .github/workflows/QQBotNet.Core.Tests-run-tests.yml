@@ -2,7 +2,11 @@ name: QQBotNet.Core.Tests Run tests
 
 on:
   push:
-  workflow_dispatch:
+    paths:
+      - "**.cs"
+  pull_request:
+    paths:
+      - "**.cs"
 
 permissions:
   id-token: write
@@ -10,7 +14,7 @@ permissions:
   checks: write
 
 jobs:
-  Build:
+  run:
     runs-on: windows-latest
     steps:
       - name: Checkout repo

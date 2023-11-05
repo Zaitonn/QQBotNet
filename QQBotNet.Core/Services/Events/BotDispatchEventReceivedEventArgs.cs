@@ -1,4 +1,3 @@
-using QQBotNet.Core.Services.Operations.DispatchEvent;
 using QQBotNet.Core.Utils.Json;
 using System;
 using System.Text.Json;
@@ -11,9 +10,9 @@ namespace QQBotNet.Core.Services.Events;
 /// </summary>
 public class BotDispatchEventReceivedEventArgs : BotDispatchEventReceivedEventArgs<JsonNode>
 {
-    internal BotDispatchEventReceivedEventArgs(DispatchEventType eventType, JsonNode? data)
+    internal BotDispatchEventReceivedEventArgs(DispatchEventType dispatchEventType, JsonNode? data)
     {
-        Event = eventType;
+        Event = dispatchEventType;
         Data = data;
     }
 }
@@ -25,9 +24,14 @@ public class BotDispatchEventReceivedEventArgs<T> : EventArgs
 {
     internal BotDispatchEventReceivedEventArgs() { }
 
-    internal BotDispatchEventReceivedEventArgs(DispatchEventType eventType, JsonNode? data)
+    internal BotDispatchEventReceivedEventArgs(
+        DispatchEventType dispatchEventType,
+        JsonNode? data,
+        string? id
+    )
     {
-        Event = eventType;
+        Event = dispatchEventType;
+        Id = id;
         Data = JsonSerializer.Deserialize<T>(data, JsonSerializerOptionsFactory.UnsafeSnakeCase);
     }
 
@@ -40,4 +44,9 @@ public class BotDispatchEventReceivedEventArgs<T> : EventArgs
     /// 分发的事件类型
     /// </summary>
     public DispatchEventType Event { get; init; }
+
+    /// <summary>
+    /// 事件Id
+    /// </summary>
+    public string? Id { get; set; }
 }

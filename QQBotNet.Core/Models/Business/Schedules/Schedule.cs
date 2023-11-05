@@ -1,6 +1,7 @@
+using QQBotNet.Core.Models.Business.Members;
+using QQBotNet.Core.Utils.Json;
 using System;
 using System.Text.Json.Serialization;
-using QQBotNet.Core.Utils.Json;
 
 namespace QQBotNet.Core.Models.Business.Schedules;
 

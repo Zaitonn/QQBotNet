@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Build:
+  build:
     runs-on: windows-latest
 
     strategy:

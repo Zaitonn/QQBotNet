@@ -27,13 +27,13 @@ public class Logger
             );
     }
 
-    public static void Error<T>(string? message, Exception e)
+    public static void Error<T>(string? message, Exception? e)
     {
 #pragma warning disable IDE0071 // 内插可以简化
 // https://github.com/spectreconsole/spectre.console/issues/1348
         lock (_lock)
             AnsiConsole.MarkupLineInterpolated(
-                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e.ToString()}[/]"
+                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e?.ToString()}[/]"
             );
 #pragma warning restore IDE0071
     }

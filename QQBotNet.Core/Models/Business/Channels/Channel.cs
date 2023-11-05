@@ -61,4 +61,9 @@ public class Channel
     /// 用于标识应用子频道应用类型，仅应用子频道时会使用该字段
     /// </summary>
     public string? ApplicationId { get; set; }
+
+    /// <summary>
+    /// 操作人（事件专属）
+    /// </summary>
+    public string? OpUserId { get; set; }
 }

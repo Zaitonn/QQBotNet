@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <ApplicationIcon>Sources/logo256.ico</ApplicationIcon>
 
         <!-- MetaData -->
         <Authors>Zaitonn</Authors>
@@ -18,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="Sources/logo256.ico" />
 		<EmbeddedResource Include="Sources/DefaultConfig.jsonc" />
         <ProjectReference Include="../QQBotNet.Core/QQBotNet.Core.csproj" />
     </ItemGroup>

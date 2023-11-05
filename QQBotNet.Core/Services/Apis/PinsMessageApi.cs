@@ -1,4 +1,4 @@
-using QQBotNet.Core.Models.Business;
+using QQBotNet.Core.Models.Business.Messages;
 using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Utils.Extensions;
 using System.Net.Http;

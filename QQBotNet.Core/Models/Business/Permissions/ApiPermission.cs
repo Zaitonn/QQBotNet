@@ -1,4 +1,4 @@
-namespace QQBotNet.Core.Models.Business.Permission;
+namespace QQBotNet.Core.Models.Business.Permissions;
 
 /// <summary>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/api_permissions/model.html#%E6%8E%A5%E5%8F%A3%E6%9D%83%E9%99%90%E5%AF%B9%E8%B1%A1-apipermission</see>

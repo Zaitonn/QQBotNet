@@ -1,4 +1,5 @@
 using QQBotNet.Core.Models.Business;
+using QQBotNet.Core.Models.Business.Members;
 using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.OpenApi.Body;
 using QQBotNet.Core.Utils.Extensions;

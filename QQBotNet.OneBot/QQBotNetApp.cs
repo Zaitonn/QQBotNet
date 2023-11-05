@@ -55,19 +55,18 @@ public sealed class QQBotNetApp : IHost
 
         Logger.Info<QQBotNetApp>("机器人实例已启动");
 
-        _instance.Invoker.WebSocketOpened += (_, _) =>
-            Logger.Info<EventInvoker>($"WebSocket: 已连接至\"{_instance.WebSocketUrl}\"");
-        _instance.Invoker.WebSocketReconnect += (_, _) =>
-            Logger.Info<EventInvoker>($"WebSocket: 正在重连");
-        _instance.Invoker.WebSocketError += (_, e) =>
-            Logger.Error<EventInvoker>("WebSocket: 出现错误", e.Exception);
-        _instance.Invoker.PacketSent += (_, e) =>
-            Logger.Debug<EventInvoker>($"WebSocket: 发送消息:{JsonSerializer.Serialize(e.Packet)}");
-        _instance.Invoker.WebSocketRawMessageReceived += (_, e) =>
-            Logger.Debug<EventInvoker>($"WebSocket: 接收消息:{e.Message}");
+        _instance.EventDispatcher.WebSocketOpened += (_, _) =>
+            Logger.Info<EventDispatcher>($"WebSocket: 已连接至\"{_instance.WebSocketUrl}\"");
+        _instance.EventDispatcher.WebSocketReconnect += (_, _) =>
+            Logger.Info<EventDispatcher>($"WebSocket: 正在重连");
+        _instance.EventDispatcher.PacketSent += (_, e) =>
+            Logger.Debug<EventDispatcher>($"WebSocket: 发送消息:{JsonSerializer.Serialize(e.Packet)}");
+        _instance.EventDispatcher.WebSocketRawMessageReceived += (_, e) =>
+            Logger.Debug<EventDispatcher>($"WebSocket: 接收消息:{e.Message}");
 
-        _instance.Invoker.WebSocketClosed += (_, _) => Logger.Warn<EventInvoker>("WebSocket: 已断开");
-        _instance.Invoker.Heartbeat += (_, _) => Logger.Info<EventInvoker>("WebSocket: 接收到心跳事件");
+        _instance.EventDispatcher.WebSocketClosed += (_, _) => Logger.Warn<EventDispatcher>("WebSocket: 已断开");
+        _instance.EventDispatcher.Heartbeat += (_, _) => Logger.Info<EventDispatcher>("WebSocket: 接收到心跳事件");
+        _instance.EventDispatcher.Exception += (_, e) => Logger.Error<EventDispatcher>("出现异常: ", e);
 
         return Task.CompletedTask;
     }

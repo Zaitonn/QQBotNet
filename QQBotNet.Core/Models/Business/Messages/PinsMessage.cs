@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Business;
+namespace QQBotNet.Core.Models.Business.Messages;
 
 /// <summary>
 /// <see>https://bot.q.qq.com/wiki/develop/api/openapi/pins/model.html#pinsmessage</see>

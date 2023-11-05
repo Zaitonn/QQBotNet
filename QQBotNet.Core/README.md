@@ -1,27 +1,12 @@
-<img src="QQBotNet.Core/Sources/logo256.png" width="150" align="right">
 
-# QQBotNet
-
-[![C#](https://img.shields.io/badge/QQBotNet.Core-%20.NET_6-blue)](#qqbotnetcore)
-[![C#](https://img.shields.io/badge/QQBotNet.OneBot-%20.NET_6-blue)](#qqbotnetonebot)
-[![wakatime](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215.svg)](https://wakatime.com/badge/user/724e95cb-6b0f-48fb-9f96-915cce8cc845/project/018b503b-48a3-4da8-b352-834ea2e59215)
-
-> **WARNING**  
->此仓库与腾讯公司**没有从属关系**，仅作个人学习开发和使用。
-
-## 目录
-
-- [QQBotNet.Core](#qqbotnetcore) QQ机器人的**非官方**C# SDK
-- [QQBotNet.OneBot](#qqbotnetonebot) QQ机器人基于Net6.0的OneBot实现
-
-## QQBotNet.Core
+# QQBotNet.Core
 
 [![Nuget](https://img.shields.io/nuget/v/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
 [![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/QQBotNet.Core)](https://www.nuget.org/packages/QQBotNet.Core)
 
 QQ机器人的**非官方**C# SDK
 
-### 安装
+## 安装
 
 [Nuget](https://www.nuget.org/packages/QQBotNet.Core)
 
@@ -29,7 +14,7 @@ QQ机器人的**非官方**C# SDK
 dotnet add package QQBotNet.Core
 ```
 
-### 使用方法
+## 使用方法
 
 ```cs
 using QQBotNet.Core;
@@ -50,7 +35,7 @@ Task.Delay(20000).Wait();
 botInstance.Dispose();
 ```
 
-### 优点
+## 优点
 
 - 所有`public`类和成员均有XML注释
 - 所有[OpenApi](./QQBotNet.Core/Services/Apis/)使用[扩展方法](https://learn.microsoft.com/zh-cn/dotnet/csharp/programming-guide/classes-and-structs/extension-methods)声明且支持异步调用
@@ -64,7 +49,7 @@ botInstance.Dispose();
   - Mono
   - Xamarin
 
-### 主要的命名空间
+## 主要的命名空间
 
 - `QQBotNet.Core`
   - `BotInstance` 机器人实例类
@@ -89,7 +74,7 @@ botInstance.Dispose();
   - `QQBotNet.Core.Services.Events` 事件分发
 - `QQBotNet.Core.Services.Utils.Extensions` 工具扩展类
 
-### 进度
+## 进度
 
 - HttpApi
   - [x] [用户](https://bot.q.qq.com/wiki/develop/api/openapi/user/model.html)
@@ -116,53 +101,3 @@ botInstance.Dispose();
   - [x] 维持心跳
   - [x] 二级事件分发
   - [ ] 分片连接
-
-## QQBotNet.OneBot
-
-[![OneBot 12](https://img.shields.io/badge/OneBot-12-black?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABwCAMAAADxPgR5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAxQTFRF////29vbr6+vAAAAk1hCcwAAAAR0Uk5T////AEAqqfQAAAKcSURBVHja7NrbctswDATQXfD//zlpO7FlmwAWIOnOtNaTM5JwDMa8E+PNFz7g3waJ24fviyDPgfhz8fHP39cBcBL9KoJbQUxjA2iYqHL3FAnvzhL4GtVNUcoSZe6eSHizBcK5LL7dBr2AUZlev1ARRHCljzRALIEog6H3U6bCIyqIZdAT0eBuJYaGiJaHSjmkYIZd+qSGWAQnIaz2OArVnX6vrItQvbhZJtVGB5qX9wKqCMkb9W7aexfCO/rwQRBzsDIsYx4AOz0nhAtWu7bqkEQBO0Pr+Ftjt5fFCUEbm0Sbgdu8WSgJ5NgH2iu46R/o1UcBXJsFusWF/QUaz3RwJMEgngfaGGdSxJkE/Yg4lOBryBiMwvAhZrVMUUvwqU7F05b5WLaUIN4M4hRocQQRnEedgsn7TZB3UCpRrIJwQfqvGwsg18EnI2uSVNC8t+0QmMXogvbPg/xk+Mnw/6kW/rraUlvqgmFreAA09xW5t0AFlHrQZ3CsgvZm0FbHNKyBmheBKIF2cCA8A600aHPmFtRB1XvMsJAiza7LpPog0UJwccKdzw8rdf8MyN2ePYF896LC5hTzdZqxb6VNXInaupARLDNBWgI8spq4T0Qb5H4vWfPmHo8OyB1ito+AysNNz0oglj1U955sjUN9d41LnrX2D/u7eRwxyOaOpfyevCWbTgDEoilsOnu7zsKhjRCsnD/QzhdkYLBLXjiK4f3UWmcx2M7PO21CKVTH84638NTplt6JIQH0ZwCNuiWAfvuLhdrcOYPVO9eW3A67l7hZtgaY9GZo9AFc6cryjoeFBIWeU+npnk/nLE0OxCHL1eQsc1IciehjpJv5mqCsjeopaH6r15/MrxNnVhu7tmcslay2gO2Z1QfcfX0JMACG41/u0RrI9QAAAABJRU5ErkJggg==)](https://12.onebot.dev/)
-
-QQ机器人基于Net6.0的OneBot实现（🚧暂未完工）
-
-```txt
-C:\>QQBotNet.OneBot.exe -h
-Description:
-  QQBot的OneBot实现
-
-Usage:
-  QQBotNet.OneBot [command] [options]
-
-Options:
-  --version       Show version information
-  -?, -h, --help  Show help and usage information
-
-Commands:
-  cfg                                    创建"config.json"
-  run <botAppId> <botToken> <botSecret>  使用命令行参数运行
-
-```
-
-### 进度
-
-- 传参
-  - [x] `config.json`
-  - [x] 命令行参数`run`
-- 通信
-  - [ ] Http
-  - [x] Http-Post
-  - [ ] 正向WebSocket
-  - [x] 反向WebSocket
-- 事件
-  - [ ] 收到消息
-- API
-  - [ ] 发送消息
-
-## 相关链接
-
-- [QQ机器人文档](https://bot.q.qq.com/wiki/)
-- [QQ机器人后台](https://q.qq.com/)
-
-## 参考借鉴
-
-- [Masuda.Net](https://github.com/ssccinng/Masuda.Net)
-- [Lagrange.Core](https://github.com/Linwenxuan05/Lagrange.Core)
-- [QQBot Python SDK](https://bot.q.qq.com/wiki/develop/pythonsdk/)

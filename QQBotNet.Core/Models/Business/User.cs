@@ -30,7 +30,6 @@ public class User
     /// <summary>
     /// 特殊关联应用的openid，需要特殊申请并配置后才会返回。如需申请，请联系平台运营人员。
     /// </summary>
-    /// <value></value>
     public string? UnionOpenid { get; set; }
 
     /// <summary>

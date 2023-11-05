@@ -1,7 +1,6 @@
-using QQBotNet.Core.Models.Business.Permission;
+using QQBotNet.Core.Models.Business.Permissions;
 using QQBotNet.Core.Models.Packets.OpenApi;
 using QQBotNet.Core.Models.Packets.OpenApi.Body;
-using QQBotNet.Core.Utils;
 using QQBotNet.Core.Utils.Extensions;
 using QQBotNet.Core.Utils.Json;
 using System.Net.Http;

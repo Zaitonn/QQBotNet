@@ -69,12 +69,12 @@ public sealed class WebSocketService
 
         _webSocketClient = new(url);
 
-        _webSocketClient.Opened += (_, _) => _instance.Invoker.OnWebSocketOpened();
-        _webSocketClient.Closed += (_, _) => _instance.Invoker.OnWebSocketClosed();
-        _webSocketClient.Error += (_, e) => _instance.Invoker.OnWebSocketError(e);
+        _webSocketClient.Opened += (_, _) => _instance.EventDispatcher.OnWebSocketOpened();
+        _webSocketClient.Closed += (_, _) => _instance.EventDispatcher.OnWebSocketClosed();
+        _webSocketClient.Error += (_, e) => _instance.EventDispatcher.OnException(e.Exception);
         _webSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
         _webSocketClient.MessageReceived += (_, e) =>
-            _instance.Invoker.OnWebSocketRawMessageReceived(e);
+            _instance.EventDispatcher.OnWebSocketRawMessageReceived(e);
 
         _operations = new();
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
@@ -127,12 +127,26 @@ public sealed class WebSocketService
                 _operations.TryGetValue(packet.OperationCode, out IOperation? operation)
                 && operation is not null
             )
-                await operation.HandleOperationAsync(packet, _instance);
+                try
+                {
+                    await operation.HandleOperationAsync(_instance, packet);
+                }
+                catch (Exception ex)
+                {
+                    _instance.EventDispatcher.OnException(ex);
+                }
 
             if (packet.SerialNumber is not null)
                 SerialNumber = packet.SerialNumber.Value;
 
-            _instance.Invoker.OnPacketReceived(new(packet));
+            try
+            {
+                _instance.EventDispatcher.OnPacketReceived(new(packet));
+            }
+            catch (Exception ex)
+            {
+                _instance.EventDispatcher.OnException(ex);
+            }
         }
     }
 
@@ -151,8 +165,9 @@ public sealed class WebSocketService
             Type = null,
             Data = packet.Data,
             Id = packet.Id,
-            OperationCode =packet.OperationCode,
+            OperationCode = packet.OperationCode,
         };
+
         await Task.Run(
             () =>
                 _webSocketClient.Send(
@@ -160,7 +175,14 @@ public sealed class WebSocketService
                 )
         );
 
-        _instance.Invoker.OnPacketSent(new(_packet));
+        try
+        {
+            _instance.EventDispatcher.OnPacketSent(new(_packet));
+        }
+        catch (Exception e)
+        {
+            _instance.EventDispatcher.OnException(e);
+        }
     }
 
     /// <summary>
@@ -184,7 +206,7 @@ public sealed class WebSocketService
         await SendPacket(
             new() { OperationCode = OperationCode.Heartbeat, Data = JsonValue.Create(SerialNumber) }
         );
-        _instance.Invoker.OnHeartbeat();
+        _instance.EventDispatcher.OnHeartbeat();
     }
 
     private void TryReconnect()
@@ -195,6 +217,6 @@ public sealed class WebSocketService
         }
 
         _webSocketClient.Open();
-        _instance.Invoker.OnWebSocketReconnect();
+        _instance.EventDispatcher.OnWebSocketReconnect();
     }
 }

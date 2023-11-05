@@ -26,7 +26,7 @@ public sealed class BotInstance : IDisposable
     /// <summary>
     /// 事件调用器
     /// </summary>
-    public readonly EventInvoker Invoker;
+    public readonly EventDispatcher EventDispatcher;
 
     /// <summary>
     /// 是否为沙箱环境
@@ -84,7 +84,7 @@ public sealed class BotInstance : IDisposable
         BotToken = botToken;
         EventIntents = eventIntents;
         IsSandbox = isSandbox;
-        Invoker = new(this);
+        EventDispatcher = new(this);
         HttpService = new(this, IsSandbox);
 
         try

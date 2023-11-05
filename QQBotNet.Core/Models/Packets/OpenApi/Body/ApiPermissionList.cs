@@ -1,5 +1,5 @@
 using System;
-using QQBotNet.Core.Models.Business.Permission;
+using QQBotNet.Core.Models.Business.Permissions;
 
 namespace QQBotNet.Core.Models.Packets.OpenApi.Body;
 

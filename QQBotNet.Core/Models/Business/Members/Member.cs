@@ -1,6 +1,6 @@
 using System;
 
-namespace QQBotNet.Core.Models.Business;
+namespace QQBotNet.Core.Models.Business.Members;
 
 /// <summary>
 /// 成员
@@ -29,8 +29,4 @@ public class Member
     /// </summary>
     public DateTime JoinedAt { get; set; }
 
-    /// <summary>
-    /// 频道 id
-    /// </summary>
-    public string? GuildId { get; set; }
 }

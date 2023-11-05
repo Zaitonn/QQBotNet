@@ -1,9 +1,9 @@
 using QQBotNet.Core.Models.Packets.WebSockets;
-using QQBotNet.Core.Services.Operations.DispatchEvent;
-using System.Collections.Generic;
+using QQBotNet.Core.Services.Events;
 using System.Threading.Tasks;
-using System.Reflection;
 using System;
+using System.Text.Json;
+using QQBotNet.Core.Utils.Json;
 
 namespace QQBotNet.Core.Services.Operations;
 
@@ -13,31 +13,35 @@ namespace QQBotNet.Core.Services.Operations;
 [Operation(OperationCode.Dispatch)]
 public class DispatchOperation : IOperation
 {
-    private static readonly Dictionary<DispatchEventType, IOperation> _handlers = new();
-
-    static DispatchOperation()
-    {
-        foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
-        {
-            var attribute = type.GetCustomAttribute<DispatchHandlerAttribute>();
-            if (
-                attribute is not null && type is not null && !_handlers.ContainsKey(attribute.Event)
-            )
-            {
-                _handlers.Add(attribute.Event, (IOperation)Activator.CreateInstance(type)!);
-            }
-        }
-    }
-
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public async Task HandleOperationAsync(IPacket packet, BotInstance botInstance)
+    public Task HandleOperationAsync(BotInstance botInstance, Packet packet)
     {
-        if (!Enum.TryParse(packet.Type, true, out DispatchEventType result))
+        if (!Enum.TryParse(packet.Type, true, out DispatchEventType type))
             throw new NotSupportedException($"未知事件类型: {packet.Type}");
 
-        if (_handlers.TryGetValue(result, out IOperation? o))
-            await o.HandleOperationAsync(packet, botInstance);
+        switch (type)
+        {
+            case DispatchEventType.READY:
+                if (botInstance.WebSocketService is not null)
+                {
+                    botInstance.WebSocketService.StartTimer();
+                    botInstance.WebSocketService.Session = JsonSerializer.Deserialize<Session>(
+                        packet.Data,
+                        JsonSerializerOptionsFactory.UnsafeSnakeCase
+                    );
+                }
+                break;
+
+            case DispatchEventType.RESUMED:
+                return Task.CompletedTask;
+
+            default:
+                botInstance.EventDispatcher.Dispatch(type, packet);
+                break;
+        }
+
+        return Task.CompletedTask;
     }
 }
