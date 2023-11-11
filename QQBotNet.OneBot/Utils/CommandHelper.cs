@@ -5,7 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System;
-using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using System.Text.Json;
+using System.Text.Encodings.Web;
 
 namespace QQBotNet.OneBot.Utils;
 
@@ -19,6 +21,7 @@ internal static class CommandHelper
 
         var botAppIdArgument = new Argument<uint>("botAppId", "机器人应用ID");
         var botTokenArgument = new Argument<string>("botToken", "机器人令牌");
+        var appSecretArgument = new Argument<string?>("appSecret", () => null, "机器人密钥");
         var sandboxOption = new Option<bool>(new[] { "--sandbox", "-sb" }, "使用官方提供的沙箱环境");
 
         var httpOption = new Option<string[]>(new[] { "--http", "-ht" }, "正向HTTP地址")
@@ -47,6 +50,7 @@ internal static class CommandHelper
 
         runCommand.AddArgument(botAppIdArgument);
         runCommand.AddArgument(botTokenArgument);
+        runCommand.AddArgument(appSecretArgument);
         runCommand.AddOption(sandboxOption);
         runCommand.AddOption(httpOption);
         runCommand.AddOption(httpPostOption);
@@ -56,6 +60,7 @@ internal static class CommandHelper
             Entry,
             botAppIdArgument,
             botTokenArgument,
+            appSecretArgument,
             sandboxOption,
             httpOption,
             httpPostOption,
@@ -72,9 +77,10 @@ internal static class CommandHelper
         return rootCommand;
     }
 
-    private static void Entry(
+    private static async Task Entry(
         uint botAppId,
         string botToken,
+        string? appSecret,
         bool sandBox,
         string[] httpOption,
         string[] httpPostOption,
@@ -84,7 +90,12 @@ internal static class CommandHelper
     {
         var appConfig = new AppConfig()
         {
-            BotInfo = { BotAppId = botAppId, BotToken = botToken, },
+            BotInfo =
+            {
+                BotAppId = botAppId,
+                BotToken = botToken,
+                AppSecret = appSecret
+            },
             Sandbox = sandBox,
             Connections = ParseConnection("http", httpOption)
                 .Concat(ParseConnection("http-post", httpPostOption))
@@ -93,7 +104,7 @@ internal static class CommandHelper
                 .ToArray()
         };
 
-        new QQBotNetAppBuilder(appConfig).Build();
+        await new QQBotNetApp(appConfig).RunAsync();
     }
 
     private static IEnumerable<Connection> ParseConnection(string type, string[] items)
@@ -107,7 +118,7 @@ internal static class CommandHelper
         return connections;
     }
 
-    private static void Entry() => new QQBotNetAppBuilder().Build().Run();
+    private static async Task Entry() => await new QQBotNetApp(ReadConfig()).RunAsync();
 
     private static void CreateAppConfigJson()
     {
@@ -116,13 +127,34 @@ internal static class CommandHelper
                 .GetExecutingAssembly()
                 .GetManifestResourceStream("QQBotNet.OneBot.Sources.DefaultConfig.jsonc")
             ?? throw new NullReferenceException(
-                "程序集嵌入文件 \"QQBotNet.OneBot.Sources.DefaultConfig.jsonc\" 为空。 "
-                    + "请检查编译环境"
+                "程序集嵌入文件 \"QQBotNet.OneBot.Sources.DefaultConfig.jsonc\" 为空。 " + "请检查编译环境"
             );
 
         using var fileStream = new FileStream("config.json", FileMode.OpenOrCreate);
         var bytes = new byte[stream.Length];
         _ = stream.Read(bytes, 0, bytes.Length);
         fileStream.Write(bytes);
+    }
+
+    private static AppConfig ReadConfig()
+    {
+        if (File.Exists("config.json"))
+        {
+            return JsonSerializer.Deserialize<AppConfig>(
+                    File.ReadAllText("config.json"),
+                    new JsonSerializerOptions
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        WriteIndented = true,
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                        ReadCommentHandling = JsonCommentHandling.Skip
+                    }
+                ) ?? throw new JsonException("转换\"config.json\"出现空值");
+        }
+
+        Logger.Warn<QQBotNetApp>(
+            "Tips: 请使用\"QQBotNet.OneBot cfg\"命令创建此文件或使用\"QQBotNet.OneBot run\"直接传递登录信息"
+        );
+        throw new NotSupportedException("缺少\"config.json\"。");
     }
 }

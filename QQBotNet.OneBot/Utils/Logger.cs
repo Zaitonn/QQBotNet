@@ -15,7 +15,7 @@ public class Logger
     {
         lock (_lock)
             AnsiConsole.MarkupLine(
-                $"{DateTime.Now:T} [cadetblue_1][[INFO]][/]  [[{typeof(T)}]] {line}"
+                $"{DateTime.Now:T} [cadetblue_1][[INFO]][/]  [[{typeof(T).Name}]] {line}"
             );
     }
 
@@ -23,17 +23,17 @@ public class Logger
     {
         lock (_lock)
             AnsiConsole.MarkupLineInterpolated(
-                $"{DateTime.Now:T} [yellow bold][[WARN]]  [[{typeof(T)}]] {line}[/]"
+                $"{DateTime.Now:T} [yellow bold][[WARN]]  [[{typeof(T).Name}]] {line}[/]"
             );
     }
 
     public static void Error<T>(string? message, Exception? e)
     {
 #pragma warning disable IDE0071 // 内插可以简化
-// https://github.com/spectreconsole/spectre.console/issues/1348
+        // https://github.com/spectreconsole/spectre.console/issues/1348
         lock (_lock)
             AnsiConsole.MarkupLineInterpolated(
-                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {message}\n{e?.ToString()}[/]"
+                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T).Name}]] {message}\n{e?.ToString()}[/]"
             );
 #pragma warning restore IDE0071
     }
@@ -42,7 +42,7 @@ public class Logger
     {
         lock (_lock)
             AnsiConsole.MarkupLineInterpolated(
-                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T)}]] {line}[/]"
+                $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T).Name}]] {line}[/]"
             );
     }
 
@@ -51,8 +51,8 @@ public class Logger
         if (EnableDebugLog)
             lock (_lock)
                 AnsiConsole.MarkupLineInterpolated(
-                    $"{DateTime.Now:T} [mediumpurple4 bold][[DEBUG]][/] [[{typeof(T)}]] {line}"
+                    $"{DateTime.Now:T} [mediumpurple4 bold][[DEBUG]][/] [[{typeof(T).Name}]] {line}"
                 );
-        System.Diagnostics.Debug.WriteLine($"[{typeof(T)}] {line}");
+        System.Diagnostics.Debug.WriteLine($"[{typeof(T).Name}] {line}");
     }
 }

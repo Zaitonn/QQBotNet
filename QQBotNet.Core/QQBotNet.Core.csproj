@@ -9,7 +9,7 @@
         <Title>QQBotNet.Core</Title>
         <Authors>Zaitonn</Authors>
         <Description>QQ机器人的非官方C# SDK</Description>
-        <Version>0.0.7-alpha</Version>
+        <Version>0.0.8-alpha</Version>
         <Copyright>Zaitonn 2023</Copyright>
         <RepositoryUrl>https://github.com/Zaitonn/QQBotNet</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -24,7 +24,7 @@
         <None Include="README.md" Pack="true" PackagePath="/"/>
         <None Include="Sources/logo256.png" Pack="true" PackagePath="/"/>
 
-        <PackageReference Include="WebSocket4Net" Version="0.15.2" />
+        <PackageReference Include="WatsonWebsocket" Version="4.0.11" />
         <PackageReference Include="System.Text.Json" Version="8.0.0-rc.2.23479.6" />
     </ItemGroup>
 

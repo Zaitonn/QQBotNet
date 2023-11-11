@@ -1,6 +1,5 @@
 using QQBotNet.Core.Models.Packets.WebSockets;
 using QQBotNet.Core.Services.Operations;
-using WebSocket4Net;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
@@ -10,6 +9,7 @@ using System.Timers;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Text.Encodings.Web;
+using WatsonWebsocket;
 
 namespace QQBotNet.Core.Services;
 
@@ -18,7 +18,7 @@ namespace QQBotNet.Core.Services;
 /// </summary>
 public sealed class WebSocketService
 {
-    private readonly WebSocket _webSocketClient;
+    private readonly WatsonWsClient _webSocketClient;
 
     private readonly Dictionary<OperationCode, IOperation> _operations;
 
@@ -54,7 +54,7 @@ public sealed class WebSocketService
     /// <summary>
     /// WebSocket连接状态
     /// </summary>
-    public WebSocketState WebSocketState => _webSocketClient.State;
+    public bool IsConnected => _webSocketClient.Connected;
 
     private Timer? _reconnectTimer;
 
@@ -72,16 +72,17 @@ public sealed class WebSocketService
         _instance = instance;
         Url = url;
 
-        _webSocketClient = new(url);
+        _webSocketClient = new(new(url));
 
-        _webSocketClient.Opened += (_, _) => _instance.EventDispatcher.OnWebSocketOpened();
-        _webSocketClient.Closed += (_, _) => _instance.EventDispatcher.OnWebSocketClosed();
-        _webSocketClient.Error += (_, e) => _instance.EventDispatcher.OnException(e.Exception);
+        _webSocketClient.ServerConnected += (_, _) => _instance.EventDispatcher.OnWebSocketOpened();
+        _webSocketClient.ServerDisconnected += (_, _) =>
+            _instance.EventDispatcher.OnWebSocketClosed();
         _webSocketClient.MessageReceived += async (_, e) => await HandlePacket(e);
         _webSocketClient.MessageReceived += (_, e) =>
             _instance.EventDispatcher.OnWebSocketRawMessageReceived(e);
 
         _operations = new();
+
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
         {
             var attribute = type.GetCustomAttribute<OperationHandlerAttribute>();
@@ -111,7 +112,7 @@ public sealed class WebSocketService
     /// <summary>
     /// 启动WebSocket连接
     /// </summary>
-    public void Start() => _webSocketClient.Open();
+    public void Start() => _webSocketClient.Start();
 
     /// <summary>
     /// 关闭WebSocket连接
@@ -121,13 +122,13 @@ public sealed class WebSocketService
         SerialNumber = 0;
         HeartbeatInterval = 0;
         Session = null;
-        _webSocketClient?.Close();
+        _webSocketClient?.Stop();
         _reconnectTimer?.Stop();
     }
 
     private async Task HandlePacket(MessageReceivedEventArgs e)
     {
-        var packet = JsonSerializer.Deserialize<Packet>(e.Message);
+        var packet = JsonSerializer.Deserialize<Packet>(e.Data);
         if (packet is not null)
         {
             if (
@@ -177,7 +178,7 @@ public sealed class WebSocketService
 
         await Task.Run(
             () =>
-                _webSocketClient.Send(
+                _webSocketClient.SendAsync(
                     JsonSerializer.Serialize(_packet, _packetJsonSerializerOptions)
                 )
         );
@@ -218,12 +219,12 @@ public sealed class WebSocketService
 
     private void TryReconnect()
     {
-        if (Session == null || _webSocketClient.State != WebSocketState.Closed)
+        if (Session == null || IsConnected)
         {
             return;
         }
 
-        _webSocketClient.Open();
+        _webSocketClient.Start();
         _instance.EventDispatcher.OnWebSocketReconnect();
     }
 }

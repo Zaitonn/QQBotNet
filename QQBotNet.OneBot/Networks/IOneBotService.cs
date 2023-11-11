@@ -12,5 +12,5 @@ public interface IOneBotService
 
     public Task StartAsync(CancellationToken cancellationToken);
 
-    public Task StopAsync(CancellationToken cancellationToken);
+    public Task StopAsync();
 }

@@ -23,9 +23,6 @@ public static class Program
         AppDomain.CurrentDomain.UnhandledException += (_, e) =>
             Logger.Error<AppDomain>("发生了未经处理的异常: " + (e.ExceptionObject as Exception)?.Message);
 
-        TaskScheduler.UnobservedTaskException += (_, e) =>
-            Logger.Error<TaskScheduler>("", e.Exception);
-
         return CommandHelper.Create().Invoke(args);
     }
 }

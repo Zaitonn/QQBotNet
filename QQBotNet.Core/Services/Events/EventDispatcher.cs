@@ -8,7 +8,7 @@ using QQBotNet.Core.Models.Business.Messages;
 using QQBotNet.Core.Models.Business.Reactions;
 using QQBotNet.Core.Models.Packets.WebSockets;
 using System;
-using WebSocket4Net;
+using WatsonWebsocket;
 
 namespace QQBotNet.Core.Services.Events;
 

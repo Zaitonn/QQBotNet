@@ -5,4 +5,6 @@ public class BotInfo
     public uint BotAppId { get; set; }
 
     public string BotToken { get; set; } = string.Empty;
+
+    public string? AppSecret { get; set; }
 }

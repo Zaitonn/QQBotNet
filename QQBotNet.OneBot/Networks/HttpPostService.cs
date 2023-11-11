@@ -38,13 +38,13 @@ public sealed class HttpPostService : OneBotServiceBase, IOneBotService
         await SendJsonAsync(lifecycle, cancellationToken);
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync()
     {
         var lifecycle = new OneBotLifecycle(BotAppId, "disable");
-        await SendJsonAsync(lifecycle, cancellationToken);
+        await SendJsonAsync(lifecycle);
     }
 
-    public async Task SendJsonAsync<T>(T json, CancellationToken cancellationToken)
+    public async Task SendJsonAsync<T>(T json, CancellationToken cancellationToken = default)
     {
         string payload = JsonSerializer.Serialize(
             json,
@@ -60,7 +60,8 @@ public sealed class HttpPostService : OneBotServiceBase, IOneBotService
         }
         catch (Exception e)
         {
-            Logger.Warn<HttpPostService>($"Post请求失败 {e}");
+            Logger.Warn<HttpPostService>($"“{_httpClient.BaseAddress}”请求失败：{e.Message}");
+            Logger.Debug<HttpPostService>($"“{_httpClient.BaseAddress}”请求失败：{e}");
         }
     }
 }

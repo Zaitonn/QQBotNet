@@ -115,7 +115,7 @@ botInstance.Dispose();
   - [x] 鉴权连接
   - [x] 维持心跳
   - [x] 二级事件分发
-  - [ ] 分片连接
+  - [x] 分片连接
 
 ## QQBotNet.OneBot
 
@@ -149,7 +149,7 @@ Commands:
 - 通信
   - [ ] Http
   - [x] Http-Post
-  - [ ] 正向WebSocket
+  - [x] 正向WebSocket
   - [x] 反向WebSocket
 - 事件
   - [ ] 收到消息
