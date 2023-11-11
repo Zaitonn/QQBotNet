@@ -10,9 +10,14 @@ namespace QQBotNet.Core.Services.Events;
 /// </summary>
 public class BotDispatchEventReceivedEventArgs : BotDispatchEventReceivedEventArgs<JsonNode>
 {
-    internal BotDispatchEventReceivedEventArgs(DispatchEventType dispatchEventType, JsonNode? data)
+    internal BotDispatchEventReceivedEventArgs(
+        DispatchEventType dispatchEventType,
+        JsonNode? data,
+        string? id
+    )
     {
         Event = dispatchEventType;
+        Id = id;
         Data = data;
     }
 }
@@ -22,7 +27,10 @@ public class BotDispatchEventReceivedEventArgs : BotDispatchEventReceivedEventAr
 /// </summary>
 public class BotDispatchEventReceivedEventArgs<T> : EventArgs
 {
-    internal BotDispatchEventReceivedEventArgs() { }
+    /// <summary>
+    /// 内部构造函数
+    /// </summary>
+    protected internal BotDispatchEventReceivedEventArgs() { }
 
     internal BotDispatchEventReceivedEventArgs(
         DispatchEventType dispatchEventType,

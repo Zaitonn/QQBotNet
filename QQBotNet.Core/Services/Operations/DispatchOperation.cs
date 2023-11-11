@@ -7,15 +7,9 @@ using QQBotNet.Core.Utils.Json;
 
 namespace QQBotNet.Core.Services.Operations;
 
-/// <summary>
-/// <see cref="OperationCode.Dispatch"/>事件处理器
-/// </summary>
-[Operation(OperationCode.Dispatch)]
-public class DispatchOperation : IOperation
+[OperationHandler(OperationCode.Dispatch)]
+internal class DispatchOperation : IOperation
 {
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
     public Task HandleOperationAsync(BotInstance botInstance, Packet packet)
     {
         if (!Enum.TryParse(packet.Type, true, out DispatchEventType type))

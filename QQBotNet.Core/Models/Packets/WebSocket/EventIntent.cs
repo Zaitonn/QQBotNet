@@ -45,10 +45,9 @@ public enum EventIntent
     AudioOrLiveChannelMember = 1 << 19,
 
     /// <summary>
-    /// 用户在群聊@机器人发送消息 或 用户在单聊发送消息给机器人
+    /// 全域机器人
     /// </summary>
-    [Obsolete("可能不可用")]
-    GroupAtMessageOrPrivateMessage = 1 << 25,
+    WholeAreaV2 = 1 << 25,
 
     /// <summary>
     /// 互动事件

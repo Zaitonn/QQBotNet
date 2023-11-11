@@ -30,13 +30,13 @@ public class Schedule
     /// <summary>
     /// 日程开始时间
     /// </summary>
-    [JsonConverter(typeof(StringTimestampConverter))]
+    [JsonConverter(typeof(MsTimestampConverter))]
     public DateTime StartTimestamp { get; set; }
 
     /// <summary>
     /// 日程结束时间
     /// </summary>
-    [JsonConverter(typeof(StringTimestampConverter))]
+    [JsonConverter(typeof(MsTimestampConverter))]
     public DateTime EndTimestamp { get; set; }
 
     /// <summary>

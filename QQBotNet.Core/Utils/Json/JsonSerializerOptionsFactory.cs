@@ -1,7 +1,6 @@
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 
 namespace QQBotNet.Core.Utils.Json;
 
@@ -16,7 +15,7 @@ public static class JsonSerializerOptionsFactory
     public static readonly JsonSerializerOptions UnsafeSnakeCase =
         new()
         {
-            PropertyNamingPolicy = new SnakeCaseJsonNamingPolicy(),
+            PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             NumberHandling = JsonNumberHandling.AllowReadingFromString
         };
@@ -26,16 +25,4 @@ public static class JsonSerializerOptionsFactory
     /// </summary>
     public static readonly JsonSerializerOptions UnsafeSnakeCaseAndIgnoreNull =
         new(UnsafeSnakeCase) { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault };
-
-    private class SnakeCaseJsonNamingPolicy : JsonNamingPolicy
-    {
-        public override string ConvertName(string name) =>
-            Regex
-                .Replace(
-                    name,
-                    "(?=.)[A-Z]",
-                    (match) => $"_{match.Groups[0].Value.ToLowerInvariant()}"
-                )
-                .TrimStart('_');
-    }
 }

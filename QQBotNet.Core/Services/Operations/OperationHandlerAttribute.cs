@@ -4,15 +4,12 @@ using System;
 namespace QQBotNet.Core.Services.Operations;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-internal class OperationAttribute : Attribute
+internal class OperationHandlerAttribute : Attribute
 {
-    internal OperationAttribute(OperationCode operation)
+    internal OperationHandlerAttribute(OperationCode operation)
     {
         Operation = operation;
     }
 
-    /// <summary>
-    /// WebSocket数据包操作代码
-    /// </summary>
     public OperationCode Operation;
 }

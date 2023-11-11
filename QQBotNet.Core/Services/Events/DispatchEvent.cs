@@ -231,7 +231,7 @@ public enum DispatchEventType
 
     #endregion
 
-    #region 互动事件INTERACTION
+    #region 互动事件 INTERACTION
 
     /// <summary>
     /// 互动事件创建时
@@ -278,7 +278,7 @@ public enum DispatchEventType
 
     #endregion
 
-    #region 群聊内测
+    #region 全域机器人
 
     /// <summary>
     /// 用户在群聊@机器人发送消息
@@ -289,6 +289,46 @@ public enum DispatchEventType
     /// 用户在单聊发送消息给机器人
     /// </summary>
     C2C_MESSAGE_CREATE,
+
+    /// <summary>
+    /// 机器人被添加到群聊
+    /// </summary>
+    GROUP_ADD_ROBOT,
+
+    /// <summary>
+    /// 机器人被移出群聊
+    /// </summary>
+    GROUP_DEL_ROBOT,
+
+    /// <summary>
+    /// 群管理员主动在机器人资料页操作关闭通知
+    /// </summary>
+    GROUP_MSG_REJECT,
+
+    /// <summary>
+    /// 群管理员主动在机器人资料页操作开启通知
+    /// </summary>
+    GROUP_MSG_RECEIVE,
+
+    /// <summary>
+    /// 用户添加机器人'好友'到消息列表
+    /// </summary>
+    FRIEND_ADD,
+
+    /// <summary>
+    /// 用户删除机器人'好友'
+    /// </summary>
+    FRIEND_DEL,
+
+    /// <summary>
+    /// 用户在机器人资料卡手动关闭"主动消息"推送
+    /// </summary>
+    C2C_MSG_REJECT,
+
+    /// <summary>
+    /// 用户在机器人资料卡手动开启"主动消息"推送开关
+    /// </summary>
+    C2C_MSG_RECEIVE,
 
     #endregion
 }

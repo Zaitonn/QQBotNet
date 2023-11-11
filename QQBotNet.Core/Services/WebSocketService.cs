@@ -49,7 +49,12 @@ public sealed class WebSocketService
     /// <summary>
     /// 当前WebSocket连接地址
     /// </summary>
-    public readonly string Url;
+    public string Url { get; init; }
+
+    /// <summary>
+    /// WebSocket连接状态
+    /// </summary>
+    public WebSocketState WebSocketState => _webSocketClient.State;
 
     private Timer? _reconnectTimer;
 
@@ -79,7 +84,7 @@ public sealed class WebSocketService
         _operations = new();
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes())
         {
-            var attribute = type.GetCustomAttribute<OperationAttribute>();
+            var attribute = type.GetCustomAttribute<OperationHandlerAttribute>();
             if (
                 attribute is not null
                 && type is not null
@@ -113,9 +118,11 @@ public sealed class WebSocketService
     /// </summary>
     public void Stop()
     {
-        _webSocketClient.Close();
-        _reconnectTimer?.Close();
+        SerialNumber = 0;
+        HeartbeatInterval = 0;
         Session = null;
+        _webSocketClient?.Close();
+        _reconnectTimer?.Stop();
     }
 
     private async Task HandlePacket(MessageReceivedEventArgs e)

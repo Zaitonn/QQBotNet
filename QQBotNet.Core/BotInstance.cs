@@ -16,32 +16,31 @@ public sealed class BotInstance : IDisposable
     /// <summary>
     /// WebSocket服务
     /// </summary>
-    public readonly WebSocketService WebSocketService;
+    public WebSocketService WebSocketService { get; }
 
     /// <summary>
     /// Http服务
     /// </summary>
-    public readonly HttpService HttpService;
+    public HttpService HttpService { get; }
 
     /// <summary>
     /// 事件调用器
     /// </summary>
-    public readonly EventDispatcher EventDispatcher;
+    public EventDispatcher EventDispatcher { get; }
 
     /// <summary>
     /// 是否为沙箱环境
     /// </summary>
-    public readonly bool IsSandbox;
+    public bool IsSandbox { get; }
 
     ///  <summary>
     /// 开发者ID
     /// </summary>
-    public readonly uint BotAppId;
+    public uint BotAppId { get; }
 
-    /// <summary>
-    /// 机器人令牌
-    /// </summary>
-    public readonly string BotToken;
+    internal readonly string BotToken;
+
+    internal readonly string? AppSecret;
 
     /// <summary>
     /// WebSocket连接地址
@@ -51,24 +50,40 @@ public sealed class BotInstance : IDisposable
     /// <summary>
     /// 事件订阅intents
     /// </summary>
-    public readonly EventIntent EventIntents;
+    public EventIntent EventIntents { get; }
+
+    /// <summary>
+    /// 使用v2的api验证
+    /// </summary>
+    public bool UseV2AppAccessToken { get; }
+
+    /// <summary>
+    /// 分片设置
+    /// <br/>
+    /// 新设定的值将在下一次重新连接中应用；你可以使用<see cref="WebSocketService.Stop()"/>断开连接并清空会话缓存后重连
+    /// </summary>
+    public int[]? Shard { get; set; }
 
     /// <summary>
     /// 机器人实例
     /// </summary>
     /// <param name="botAppId">开发者ID</param>
     /// <param name="botToken">机器人令牌</param>
+    /// <param name="appSecret">机器人密钥，若提供则使用apiv2的验证方式</param>
     /// <param name="eventIntents">事件订阅intents</param>
-    /// /// <param name="isSandbox">是否为沙箱环境</param>
+    /// <param name="isSandbox">是否为沙箱环境</param>
+    /// <param name="shard">分片设置</param>
     public BotInstance(
         uint botAppId,
         string botToken,
+        string? appSecret = null,
         EventIntent eventIntents =
             EventIntent.ForumEvent
             | EventIntent.GuildMessages
             | EventIntent.GuildMessageReactions
             | EventIntent.GuildMembers,
-        bool isSandbox = false
+        bool isSandbox = false,
+        int[]? shard = null
     )
     {
         if (botAppId == 0)
@@ -82,10 +97,12 @@ public sealed class BotInstance : IDisposable
 
         BotAppId = botAppId;
         BotToken = botToken;
+        AppSecret = appSecret;
         EventIntents = eventIntents;
         IsSandbox = isSandbox;
+        Shard = shard;
         EventDispatcher = new(this);
-        HttpService = new(this, IsSandbox);
+        HttpService = new(this);
 
         try
         {

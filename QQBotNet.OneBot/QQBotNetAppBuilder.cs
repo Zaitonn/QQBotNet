@@ -40,7 +40,7 @@ public sealed class QQBotNetAppBuilder
         else
         {
             Logger.Error<QQBotNetAppBuilder>(
-                "Tips: 请使用\"QQBotNet.OneBot init\"命令创建此文件或使用\"QQBotNet.OneBot run\"直接传递登录信息",
+                "Tips: 请使用\"QQBotNet.OneBot cfg\"命令创建此文件或使用\"QQBotNet.OneBot run\"直接传递登录信息",
                 new NotSupportedException("缺少\"config.json\"。")
             );
             if (AnsiConsole.Profile.Capabilities.Interactive && !Console.IsInputRedirected)

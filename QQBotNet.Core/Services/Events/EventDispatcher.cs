@@ -1,3 +1,4 @@
+using QQBotNet.Core.Models.Business.Action;
 using QQBotNet.Core.Models.Business.Audio;
 using QQBotNet.Core.Models.Business.Channels;
 using QQBotNet.Core.Models.Business.Forums;
@@ -14,7 +15,7 @@ namespace QQBotNet.Core.Services.Events;
 /// <summary>
 /// 事件分发
 /// </summary>
-public class EventDispatcher
+public sealed class EventDispatcher
 {
     internal EventDispatcher(BotInstance botInstance)
     {
@@ -97,11 +98,6 @@ public class EventDispatcher
     /// 接收到调度事件
     /// </summary>
     public event EventHandler<BotDispatchEventReceivedEventArgs>? BotDispatchEventReceived;
-
-    internal void OnBotDispatchEventReceived(BotDispatchEventReceivedEventArgs e)
-    {
-        BotDispatchEventReceived?.Invoke(_botInstance, e);
-    }
 
     /// <summary>
     /// 发生异常
@@ -240,10 +236,49 @@ public class EventDispatcher
     /// </summary>
     public event EventHandler<BotDispatchEventReceivedEventArgs<MessageReaction>>? ReactionUpdated;
 
+    /// <summary>
+    /// 接收到以下群聊消息调度事件
+    /// <br/>
+    /// - <see cref="DispatchEventType.GROUP_AT_MESSAGE_CREATE"/><br/>
+    /// </summary>
+    public event EventHandler<BotDispatchEventReceivedEventArgs<MessageV2>>? GroupAtMessageCreated;
+
+    /// <summary>
+    /// 接收到以下私聊消息调度事件
+    /// <br/>
+    /// - <see cref="DispatchEventType.C2C_MESSAGE_CREATE"/><br/>
+    /// </summary>
+    public event EventHandler<BotDispatchEventReceivedEventArgs<MessageV2>>? C2CMessageCreated;
+
+    /// <summary>
+    /// 接收到以下群聊调度事件
+    /// <br/>
+    /// - <see cref="DispatchEventType.GROUP_ADD_ROBOT"/><br/>
+    /// - <see cref="DispatchEventType.GROUP_DEL_ROBOT"/><br/>
+    /// - <see cref="DispatchEventType.GROUP_MSG_RECEIVE"/><br/>
+    /// - <see cref="DispatchEventType.GROUP_MSG_REJECT"/><br/>
+    /// </summary>
+    public event EventHandler<BotDispatchEventReceivedEventArgs<GroupAction>>? GroupUpdated;
+
+    /// <summary>
+    /// 接收到以下私聊调度事件
+    /// <br/>
+    /// - <see cref="DispatchEventType.FRIEND_ADD"/><br/>
+    /// - <see cref="DispatchEventType.FRIEND_DEL"/><br/>
+    /// - <see cref="DispatchEventType.C2C_MSG_RECEIVE"/><br/>
+    /// - <see cref="DispatchEventType.C2C_MSG_REJECT"/><br/>
+    /// </summary>
+    public event EventHandler<BotDispatchEventReceivedEventArgs<C2CAction>>? C2CUpdated;
+
     #endregion
 
     internal void Dispatch(DispatchEventType dispatchEventType, Packet packet)
     {
+        BotDispatchEventReceived?.Invoke(
+            _botInstance,
+            new(dispatchEventType, packet.Data, packet.Id)
+        );
+
         switch (dispatchEventType)
         {
             case DispatchEventType.GUILD_CREATE:
@@ -345,8 +380,32 @@ public class EventDispatcher
                 break;
 
             case DispatchEventType.GROUP_AT_MESSAGE_CREATE:
+                GroupAtMessageCreated?.Invoke(
+                    _botInstance,
+                    new(dispatchEventType, packet.Data, packet.Id)
+                );
+                break;
+
             case DispatchEventType.C2C_MESSAGE_CREATE:
-                throw new NotImplementedException();
+                C2CMessageCreated?.Invoke(
+                    _botInstance,
+                    new(dispatchEventType, packet.Data, packet.Id)
+                );
+                break;
+
+            case DispatchEventType.GROUP_ADD_ROBOT:
+            case DispatchEventType.GROUP_DEL_ROBOT:
+            case DispatchEventType.GROUP_MSG_REJECT:
+            case DispatchEventType.GROUP_MSG_RECEIVE:
+                GroupUpdated?.Invoke(_botInstance, new(dispatchEventType, packet.Data, packet.Id));
+                break;
+
+            case DispatchEventType.FRIEND_ADD:
+            case DispatchEventType.FRIEND_DEL:
+            case DispatchEventType.C2C_MSG_REJECT:
+            case DispatchEventType.C2C_MSG_RECEIVE:
+                C2CUpdated?.Invoke(_botInstance, new(dispatchEventType, packet.Data, packet.Id));
+                break;
 
             case DispatchEventType.NULL:
             case DispatchEventType.READY:

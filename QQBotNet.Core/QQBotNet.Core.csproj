@@ -25,6 +25,7 @@
         <None Include="Sources/logo256.png" Pack="true" PackagePath="/"/>
 
         <PackageReference Include="WebSocket4Net" Version="0.15.2" />
+        <PackageReference Include="System.Text.Json" Version="8.0.0-rc.2.23479.6" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)'!='net6.0'">

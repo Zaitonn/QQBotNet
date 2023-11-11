@@ -5,9 +5,9 @@ using System.Text.Json.Serialization;
 namespace QQBotNet.Core.Utils.Json;
 
 /// <summary>
-/// 时间对象转换器
+/// 毫秒级时间戳转换器
 /// </summary>
-public class StringTimestampConverter : JsonConverter<DateTime>
+public class MsTimestampConverter : JsonConverter<DateTime>
 {
     /// <summary>
     /// <inheritdoc/>

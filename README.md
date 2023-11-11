@@ -137,7 +137,7 @@ Options:
 
 Commands:
   cfg                                    创建"config.json"
-  run <botAppId> <botToken> <botSecret>  使用命令行参数运行
+  run <botAppId> <botToken> <appSecret>  使用命令行参数运行
 
 ```
 

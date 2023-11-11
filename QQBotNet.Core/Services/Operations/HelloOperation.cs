@@ -5,12 +5,9 @@ using System.Threading.Tasks;
 
 namespace QQBotNet.Core.Services.Operations;
 
-[Operation(OperationCode.Hello)]
+[OperationHandler(OperationCode.Hello)]
 internal class HelloOperation : IOperation
 {
-    /// <summary>
-    /// <inheritdoc/>
-    /// </summary>
     public async Task HandleOperationAsync(BotInstance botInstance, Packet packet)
     {
         if (botInstance.WebSocketService?.Session is null)
@@ -22,7 +19,7 @@ internal class HelloOperation : IOperation
                         new Identification
                         {
                             Token = $"{botInstance.BotAppId}.{botInstance.BotToken}",
-                            Shard = new[] { 0, 1 },
+                            Shard = botInstance.Shard ?? new[] { 0, 1 },
                             Intents = botInstance.EventIntents,
                         },
                         JsonSerializerOptionsFactory.UnsafeSnakeCase
