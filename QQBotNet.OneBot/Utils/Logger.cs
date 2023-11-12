@@ -14,7 +14,7 @@ public class Logger
     public static void Info<T>(string? line)
     {
         lock (_lock)
-            AnsiConsole.MarkupLine(
+            AnsiConsole.MarkupLineInterpolated(
                 $"{DateTime.Now:T} [cadetblue_1][[INFO]][/]  [[{typeof(T).Name}]] {line}"
             );
     }
@@ -29,8 +29,7 @@ public class Logger
 
     public static void Error<T>(string? message, Exception? e)
     {
-#pragma warning disable IDE0071 // 内插可以简化
-        // https://github.com/spectreconsole/spectre.console/issues/1348
+#pragma warning disable IDE0071 // 内插可以简化 bug:https://github.com/spectreconsole/spectre.console/issues/1348
         lock (_lock)
             AnsiConsole.MarkupLineInterpolated(
                 $"{DateTime.Now:T} [red bold][[ERROR]] [[{typeof(T).Name}]] {message}\n{e?.ToString()}[/]"

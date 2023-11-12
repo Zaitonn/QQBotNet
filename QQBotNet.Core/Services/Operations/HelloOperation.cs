@@ -43,9 +43,10 @@ internal class HelloOperation : IOperation
                 }
             );
 
-        int? heartbeatInterval = packet
-            .Convert<HeartbeatInfo>(JsonSerializerOptionsFactory.UnsafeSnakeCase)
-            .Data?.HeartbeatInterval;
-        botInstance.WebSocketService.HeartbeatInterval = heartbeatInterval ?? 0;
+        int heartbeatInterval =
+            packet
+                .Convert<HeartbeatInfo>(JsonSerializerOptionsFactory.UnsafeSnakeCase)
+                .Data?.HeartbeatInterval ?? 0;
+        botInstance.WebSocketService.HeartbeatInterval = heartbeatInterval - 500;
     }
 }

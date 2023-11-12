@@ -88,23 +88,25 @@ public sealed class ReverseWSService : OneBotServiceBase, IOneBotService
         return Task.CompletedTask;
     }
 
-    public Task SendJsonAsync<T>(T json, CancellationToken cancellationToken)
+    public async Task SendJsonAsync(string json, CancellationToken cancellationToken)
     {
         if (_websocketClient.Connected)
-            _websocketClient.SendAsync(
-                JsonSerializer.Serialize(json, JsonSerializerOptionsFactory.UnsafeSnakeCase),
-                WebSocketMessageType.Text,
-                cancellationToken
-            );
-
-        return Task.CompletedTask;
+            await _websocketClient.SendAsync(json, WebSocketMessageType.Text, cancellationToken);
     }
 
-    private void OnHeartbeat()
+    public async Task SendJsonAsync<T>(T json, CancellationToken cancellationToken)
+    {
+        await SendJsonAsync(
+            JsonSerializer.Serialize(json, JsonSerializerOptionsFactory.UnsafeSnakeCase),
+            cancellationToken
+        );
+    }
+
+    private async void OnHeartbeat()
     {
         var status = new OneBotStatus(true, true);
         var heartBeat = new OneBotHeartBeat(BotAppId, 5000, status);
 
-        SendJsonAsync(heartBeat, CancellationToken.None);
+        await SendJsonAsync(heartBeat, CancellationToken.None);
     }
 }

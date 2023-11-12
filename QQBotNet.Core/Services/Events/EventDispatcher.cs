@@ -412,7 +412,7 @@ public sealed class EventDispatcher
             case DispatchEventType.RESUMED:
             case DispatchEventType.INTERACTION_CREATE:
             default:
-                throw new NotSupportedException();
+                break;
         }
     }
 }

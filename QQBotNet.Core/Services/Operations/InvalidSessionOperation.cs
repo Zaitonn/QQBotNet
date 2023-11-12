@@ -9,6 +9,7 @@ internal class InvalidSessionOperation : IOperation
     public Task HandleOperationAsync(BotInstance botInstance, Packet packet)
     {
         botInstance.WebSocketService.Session = null;
+        botInstance.WebSocketService.Stop();
         return Task.CompletedTask;
     }
 }

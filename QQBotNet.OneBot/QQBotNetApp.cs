@@ -1,11 +1,13 @@
 using QQBotNet.Core;
 using QQBotNet.Core.Services;
 using QQBotNet.Core.Services.Events;
+using QQBotNet.Core.Utils.Json;
 using QQBotNet.OneBot.Models.Config;
 using QQBotNet.OneBot.Network;
 using QQBotNet.OneBot.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -15,7 +17,7 @@ namespace QQBotNet.OneBot;
 
 public sealed class QQBotNetApp : IDisposable
 {
-    private readonly AppConfig _appConfig;
+    public readonly AppConfig AppConfig;
 
     private readonly BotInstance _instance;
 
@@ -23,17 +25,20 @@ public sealed class QQBotNetApp : IDisposable
 
     private readonly List<IOneBotService> _services = new();
 
+    private readonly Business.EventHandler _eventHandler;
+
     internal QQBotNetApp(AppConfig appConfig)
     {
         Logger.EnableDebugLog = appConfig.DebugLog;
         Console.CancelKeyPress += (_, _) => Stop();
 
-        _appConfig = appConfig;
+        AppConfig = appConfig;
         _instance = new(
-            _appConfig.BotInfo.BotAppId,
-            _appConfig.BotInfo.BotToken,
-            isSandbox: _appConfig.Sandbox
+            AppConfig.BotInfo.BotAppId,
+            AppConfig.BotInfo.BotToken,
+            isSandbox: AppConfig.Sandbox
         );
+        _eventHandler = new(this);
 
         _instance.EventDispatcher.WebSocketOpened += (_, _) =>
             Logger.Info<WebSocketService>($"已连接至\"{_instance.WebSocketUrl}\"");
@@ -45,21 +50,25 @@ public sealed class QQBotNetApp : IDisposable
             Logger.Debug<WebSocketService>($"接收消息：{Encoding.UTF8.GetString(e.Data)}");
 
         _instance.EventDispatcher.WebSocketClosed += (_, _) => Logger.Warn<WebSocketService>("已断开");
-        _instance.EventDispatcher.Heartbeat += (_, _) => Logger.Info<WebSocketService>("接收到心跳事件");
+        _instance.EventDispatcher.Heartbeat += (_, _) => Logger.Info<WebSocketService>("发送心跳事件");
         _instance.EventDispatcher.Exception += (_, e) => Logger.Error<EventDispatcher>("出现异常：", e);
+        _instance.EventDispatcher.BotDispatchEventReceived += HandleDispatchEvent;
+        _instance.EventDispatcher.MessageCreated += _eventHandler.HandleMessageCreated;
 
-        foreach (var connection in _appConfig.Connections)
+        foreach (var connection in AppConfig.Connections)
         {
+            if (!connection.Enable)
+                continue;
+
             IOneBotService? service;
             try
             {
                 service = connection.Type switch
                 {
-                    "http-post" => new HttpPostService(_appConfig.BotInfo.BotAppId, connection),
+                    "http-post" => new HttpPostService(AppConfig.BotInfo.BotAppId, connection),
                     "reverse-websocket"
-                        => new ReverseWSService(_appConfig.BotInfo.BotAppId, connection),
-                    "websocket"
-                        => new ForwardWSService(_appConfig.BotInfo.BotAppId, connection),
+                        => new ReverseWSService(AppConfig.BotInfo.BotAppId, connection),
+                    "websocket" => new ForwardWSService(AppConfig.BotInfo.BotAppId, connection),
                     _ => null
                 };
             }
@@ -118,5 +127,23 @@ public sealed class QQBotNetApp : IDisposable
 
         _tokenSource.Cancel();
         Logger.Info<QQBotNetApp>("QQBotNet.OneBot已关闭");
+    }
+
+    public void Broadcast<T>(T packet)
+    {
+        var payload = JsonSerializer.Serialize(
+            packet,
+            JsonSerializerOptionsFactory.UnsafeSnakeCase
+        );
+        lock (_services)
+            _services.ForEach((service) => service.SendJsonAsync(payload, _tokenSource.Token));
+    }
+
+    private void HandleDispatchEvent(object? sender, BotDispatchEventReceivedEventArgs e)
+    {
+        if (e.Event == DispatchEventType.READY && _instance.WebSocketService.Session is not null)
+            Logger.Info<QQBotNetApp>(
+                $"机器人登录成功：[{_instance.WebSocketService.Session.User.Username}]({_instance.WebSocketService.Session.User.Id})"
+            );
     }
 }

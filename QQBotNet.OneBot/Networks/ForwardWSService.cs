@@ -77,16 +77,14 @@ public sealed class ForwardWSService : IOneBotService
         return Task.CompletedTask;
     }
 
-    public Task SendJsonAsync<T>(T json, CancellationToken cancellationToken = default)
+    public Task SendJsonAsync(string json, CancellationToken cancellationToken = default)
     {
-        var payload = JsonSerializer.Serialize(json);
-
         var clients = _websocketServer.ListClients();
         clients
             .ToList()
             .ForEach(
                 async (client) =>
-                    await _websocketServer.SendAsync(client.Guid, payload, token: cancellationToken)
+                    await _websocketServer.SendAsync(client.Guid, json, token: cancellationToken)
             );
 
         return Task.CompletedTask;

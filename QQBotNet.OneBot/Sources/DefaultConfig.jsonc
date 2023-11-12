@@ -1,6 +1,6 @@
 {
     //  [[README]]
-    //  @version 0.0.2-alpha
+    //  @version 0.0.2.1
     //  - 这是QQBotNet.Onebot的默认配置文件。
     //  - 推荐使用Visual Studio Code等文本编辑器编辑，不推荐使用记事本（除非你熟悉JSON语法）
     //  - 文件语言选择"JSON5"或"JSON with Comments"以支持注释
@@ -10,12 +10,14 @@
      */
     "botInfo": {
         "botAppId": 0, // 开发者ID，格式应为10xxxxxxx
-        "botToken": "" // 机器人令牌
+        "botToken": "", // 机器人令牌
+        "appSecret": "" // 机器人密钥（可选，提供后Api服务将使用v2的验证方式）
     },
     /**
      *  [使用环境变量作为帐号的输入]
      *      - 若启用将忽略以上配置
      *      - 将从环境变量中选取"QQBOTNET_APPID"、"QQBOTNET_TOKEN"和"QQBOTNET_SECRET"作为以上三项的值
+     *      - 若环境变量缺少以上三个值将会引发异常
      */
     "useEnvironmentVariables": false,
     /**
@@ -25,7 +27,18 @@
      */
     "sandbox": false,
     /**
+     *  [将频道作为群组解析]
+     *      - 启用后频道私聊和频道子频道消息将被分别作为普通的私聊和群聊事件上报
+     */
+    "parseGuildAsGroup": false,
+    /**
+     *  [使用消息段作为上报的格式]
+     *      - 详见<https://github.com/botuniverse/onebot-11/blob/master/message/array.md>
+     */
+    "useArrayAsPostFormat": false,
+    /**
      *   [连接方式]
+     *      - "enable" 是否启用
      *      - "type"  连接类型 允许的值如下
      *          - "http"                HttpApi服务器       <https://github.com/botuniverse/onebot-11/blob/master/communication/http.md>
      *          - "http-post"           反向Http Post       <https://github.com/botuniverse/onebot-11/blob/master/communication/http-post.md>
@@ -51,7 +64,7 @@
         {
             "type": "websocket",
             "enable": false,
-            "address": "ws://127.0.0.1:8080",
+            "address": "http://127.0.0.1:8080",
             "authorization": null
         },
         {
@@ -61,5 +74,9 @@
             "authorization": null
         }
     ],
-    "debugLog": false
+    /**
+     *  [开启调试输出]
+     */
+    "debugLog": false,
+    "_version": "0.0.2.1"
 }

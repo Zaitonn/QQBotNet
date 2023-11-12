@@ -74,6 +74,7 @@ public sealed class WebSocketService
 
         _webSocketClient = new(new(url));
 
+        _webSocketClient.ServerConnected += (_, _) => _reconnectTimer?.Start();
         _webSocketClient.ServerConnected += (_, _) => _instance.EventDispatcher.OnWebSocketOpened();
         _webSocketClient.ServerDisconnected += (_, _) =>
             _instance.EventDispatcher.OnWebSocketClosed();
@@ -176,15 +177,11 @@ public sealed class WebSocketService
             OperationCode = packet.OperationCode,
         };
 
-        await Task.Run(
-            () =>
-                _webSocketClient.SendAsync(
-                    JsonSerializer.Serialize(_packet, _packetJsonSerializerOptions)
-                )
-        );
-
         try
         {
+            await _webSocketClient.SendAsync(
+                JsonSerializer.Serialize(_packet, _packetJsonSerializerOptions)
+            );
             _instance.EventDispatcher.OnPacketSent(new(_packet));
         }
         catch (Exception e)

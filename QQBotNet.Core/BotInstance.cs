@@ -81,7 +81,8 @@ public sealed class BotInstance : IDisposable
             EventIntent.ForumEvent
             | EventIntent.GuildMessages
             | EventIntent.GuildMessageReactions
-            | EventIntent.GuildMembers,
+            | EventIntent.GuildMembers
+            | EventIntent.DirectMessage,
         bool isSandbox = false,
         int[]? shard = null
     )

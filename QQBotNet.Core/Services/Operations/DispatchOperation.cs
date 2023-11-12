@@ -30,11 +30,8 @@ internal class DispatchOperation : IOperation
 
             case DispatchEventType.RESUMED:
                 return Task.CompletedTask;
-
-            default:
-                botInstance.EventDispatcher.Dispatch(type, packet);
-                break;
         }
+        botInstance.EventDispatcher.Dispatch(type, packet);
 
         return Task.CompletedTask;
     }
